@@ -1,3 +1,5 @@
+server/.env
+
 server/node_modules/.package-lock.json
 server/node_modules/.bin/mime
 server/node_modules/.bin/mime.cmd
