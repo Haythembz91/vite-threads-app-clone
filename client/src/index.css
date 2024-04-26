@@ -1,0 +1,17 @@
+body{
+    margin: 0;
+    padding: 0;
+}
+
+svg{
+    width: 24px;
+    padding: 20px;
+    fill: #4b4c4f;
+}
+
+header{
+    display: flex;
+    justify-content: space-between;
+    height: 60px;
+    background-color: rgba(0,0,0,0.9);
+}
