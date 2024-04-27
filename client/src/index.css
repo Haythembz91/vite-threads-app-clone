@@ -9,7 +9,7 @@ svg{
     fill: #4b4c4f;
 }
 
-header{
+.header{
     display: flex;
     justify-content: space-between;
     height: 70px;
@@ -19,3 +19,6 @@ header{
     backdrop-filter: blur(5px);
 }
 
+h1,h2,p{
+    margin: 4px;
+}

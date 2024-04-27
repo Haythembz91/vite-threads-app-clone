@@ -7,8 +7,7 @@ const Feed = ()=>{
     return (
         <div>
             <h2>Feed page</h2>
-            <img alt={'tantot'}
-                 src={'https://simp6.host.church/images3/1536x2048_9a84e2ea031335da412922119a96487fa27693120ef0b8aa.jpg'}/>
+            <img src={'https://simp4.host.church/2024/popps-painting-5bc978b378b9486e18f005986332eab54.jpg'}/>
         </div>
 
     )
