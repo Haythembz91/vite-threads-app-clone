@@ -5,13 +5,17 @@ body{
 
 svg{
     width: 24px;
-    padding: 20px;
+    padding: 20px 40px;
     fill: #4b4c4f;
 }
 
 header{
     display: flex;
     justify-content: space-between;
-    height: 60px;
+    height: 70px;
     background-color: rgba(0,0,0,0.9);
+    position: sticky;
+    top: 0;
+    backdrop-filter: blur(5px);
 }
+
