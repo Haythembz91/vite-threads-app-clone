@@ -1,5 +1,5 @@
 
-import Feed from './pages/Feed.jsx'
+import Home from './pages/Home.jsx'
 import Header from './components/Header.jsx'
 import PopUp from './components/PopUp.jsx'
 import {Route,Routes} from "react-router-dom";
@@ -12,7 +12,7 @@ const App = ()=>{
             <Header></Header>
             <div>
                 <Routes>
-                    <Route path={"/home"} element={<Feed/>}></Route>
+                    <Route path={"/"} element={<Home/>}></Route>
                     <Route path={"/profile"} element={<Profile/>}></Route>
                 </Routes>
             </div>
