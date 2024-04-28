@@ -8,7 +8,7 @@ const FeedCard = styled.article`
         color:rgb(114,114,114);
     }
 `
-const TextContainer = styled.div`
+export const TextContainer = styled.div`
     img{
         width: 40px;
         border-radius: 50%;

@@ -7,16 +7,18 @@ import Profile from './pages/Profile.jsx'
 
 
 const App = ()=>{
+
+    const pop = false
     return(
         <div className={'app'}>
-            <Header></Header>
+            <Header pop={pop}></Header>
             <div>
                 <Routes>
                     <Route path={"/"} element={<Home/>}></Route>
                     <Route path={"/profile"} element={<Profile/>}></Route>
                 </Routes>
             </div>
-
+            {pop && <PopUp pop={pop}></PopUp>}
         </div>
     )
 }

@@ -76,7 +76,7 @@ const Profile = ()=>{
                 <SubInfoContainer>
                     <p style={{color: 'rgb(114, 114, 114)'}}>X followers ·<a href={''} target={'_blank'}>Link</a></p>
                 </SubInfoContainer>
-                <button className={'share-prf'}>Share profile</button>
+                <button className={'primary'}>Share profile</button>
                 <Buttoncontainer>
                     <button style={mode === 'threads' ? {
                         color: 'rgb(250,250,250)',
