@@ -25,11 +25,11 @@ const App = ()=>{
 
     return(
         <div className={'app'}>
-            <Header setShowModal={setShowModal}></Header>
+            <Header setShowModal={setShowModal} user={user}></Header>
             <div>
                 <Routes>
                     <Route path={"/"} element={<Home/>}></Route>
-                    <Route path={"/profile"} element={<Profile user={user} followers={followers}/>}></Route>
+                    <Route path={`/${user.handle}`} element={<Profile user={user} followers={followers}/>}></Route>
                 </Routes>
             </div>
             {showModal && <PopUp setShowModal={setShowModal}></PopUp>}

@@ -75,7 +75,7 @@ const Profile = ({user,followers})=>{
                 </InfoContainer>
                 <p>{user.bio}</p>
                 <SubInfoContainer>
-                    <p style={{color: 'rgb(114, 114, 114)'}}>{followers} followers · <a href={`https://${user.link}`} target={'_blank'}>{user.link}</a></p>
+                    <p style={{color: 'rgb(114, 114, 114)'}}>{followers} followers · <a href={user.link} target={'_blank'}>{user.link}</a></p>
                 </SubInfoContainer>
                 <button className={'primary'}>Share profile</button>
                 <ButtonContainer>

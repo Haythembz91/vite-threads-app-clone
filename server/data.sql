@@ -17,9 +17,9 @@ CREATE TABLE profiles(
     inst_url VARCHAR (255)
 );
 
-CREATE TABLE follows(
-    leaderId VARCHAR (255) PRIMARY KEY,
-    followerId VARCHAR(255)
+CREATE TABLE followers(
+    leader VARCHAR (255),
+    follower VARCHAR(255)
 
 );
 
