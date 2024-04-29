@@ -8,6 +8,10 @@ header svg{
     width: 24px;
     padding: 20px 40px;
     fill: #4b4c4f;
+    border-radius: 10px;
+    &:hover{
+       background-color: rgb(30,30,30);
+    }
 }
 
 .header{
@@ -34,10 +38,15 @@ button.primary{
     color: rgb(250,250,250);
     font-weight: bold;
     width: 100%;
+    cursor: pointer;
 }
 
 .profile-page-container{
     width: 50%;
     margin: auto;
     padding-top:35px;
+}
+
+svg{
+    cursor: pointer;
 }

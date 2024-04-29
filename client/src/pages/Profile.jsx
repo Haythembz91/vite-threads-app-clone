@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Feed from './../components/Feed.jsx'
 
 
@@ -38,7 +38,7 @@ const SubInfoContainer = styled.div`
     color: rgb(114,114,114);
   }
 `
-const Buttoncontainer = styled.div`
+const ButtonContainer = styled.div`
     button{
         border: none;
         background-color: transparent;
@@ -56,28 +56,29 @@ const Buttoncontainer = styled.div`
 
 
 
-const Profile = ()=>{
+const Profile = ({user,followers})=>{
 
     const [mode,setMode] = useState('threads')
+
 
     return(
         <div className={'profile-page-container'}>
             <header>
                 <InfoContainer>
                     <UserInfoContainer>
-                        <h1>Ania Kubow</h1>
-                        <p>handle <span>threads.net</span></p>
+                        <h1>{user.username}</h1>
+                        <p>{user.handle} <span>threads.net</span></p>
                     </UserInfoContainer>
                     <ImageContainer>
-                        <img src={'https://scrimba.com/avatars/uid/uN32gmcm/64'} alt={'avatar image'}/>
+                        <img src={user.img} alt={'avatar image'}/>
                     </ImageContainer>
                 </InfoContainer>
-                <p>Bio</p>
+                <p>{user.bio}</p>
                 <SubInfoContainer>
-                    <p style={{color: 'rgb(114, 114, 114)'}}>X followers ·<a href={''} target={'_blank'}>Link</a></p>
+                    <p style={{color: 'rgb(114, 114, 114)'}}>{followers} followers · <a href={`https://${user.link}`} target={'_blank'}>{user.link}</a></p>
                 </SubInfoContainer>
                 <button className={'primary'}>Share profile</button>
-                <Buttoncontainer>
+                <ButtonContainer>
                     <button style={mode === 'threads' ? {
                         color: 'rgb(250,250,250)',
                         borderBottom: '1.5px solid rgb(250,250,250)'
@@ -88,7 +89,7 @@ const Profile = ()=>{
                         borderBottom: '1.5px solid rgb(250,250,250)'
                     } : {color: 'rgb(114, 114, 114)'}} onClick={() => setMode('replies')}>Replies
                     </button>
-                </Buttoncontainer>
+                </ButtonContainer>
             </header>
             <Feed></Feed>
         </div>
