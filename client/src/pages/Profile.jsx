@@ -91,7 +91,7 @@ const Profile = ({user,followers})=>{
                     </button>
                 </ButtonContainer>
             </header>
-            <Feed></Feed>
+            <Feed user={user}></Feed>
         </div>
     )
 }

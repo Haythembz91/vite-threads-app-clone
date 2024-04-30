@@ -27,8 +27,6 @@ CREATE TABLE threads (
     id VARCHAR(255) PRIMARY KEY,
     time_stamp VARCHAR (255),
     thread_from VARCHAR (255),
-    thread_to VARCHAR (255),
-    reply_to VARCHAR (255),
     text VARCHAR (255)
 );
 

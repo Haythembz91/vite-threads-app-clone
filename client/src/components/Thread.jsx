@@ -22,12 +22,12 @@ const Icons=styled.div`
         width: 20px;
     }
 `
-const Thread =()=>{
+const Thread =({user})=>{
     return (
        <FeedCard>
          <TextContainer>
-             <img src={'https://scrimba.com/avatars/uid/uN32gmcm/64'} alt={'avatar image'}/>
-             <p><strong>handle</strong></p>
+             <img src={user.img} alt={'avatar image'}/>
+             <p><strong>{user.handle}</strong></p>
              <p style={{color:'rgb(114,114,114)'}}>21/05/2024</p>
          </TextContainer>
            <p>text</p>
