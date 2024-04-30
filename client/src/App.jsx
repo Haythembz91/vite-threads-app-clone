@@ -11,8 +11,10 @@ const App = ()=>{
 
     const [showModal,setShowModal]=useState(false)
     const [user,setUser]=useState('kubowania')
+    const [threads,setThreads]=useState(null)
     const [followers,setFollowers]=useState(0)
     const handle = 'kubowania'
+
     const getUserData = async()=>{
         const response  = await fetch(`http://localhost:8000/${handle}`)
         const data = await response.json()
@@ -21,14 +23,24 @@ const App = ()=>{
     }
     useEffect( ()=>{
         getUserData()
+        getThreads()
     },[])
+
+    const getThreads = async()=>{
+        const response = await fetch('http://localhost:8000/')
+        const data = await response.json()
+        setThreads(data)
+    }
+console.log(threads)
+
+
 
     return(
         <div className={'app'}>
             <Header setShowModal={setShowModal} user={user}></Header>
             <div>
                 <Routes>
-                    <Route path={"/"} element={<Home/>}></Route>
+                    <Route path={"/"} element={<Home user={user} threads={threads}/>}></Route>
                     <Route path={`/${user.handle}`} element={<Profile user={user} followers={followers}/>}></Route>
                 </Routes>
             </div>

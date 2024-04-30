@@ -6,6 +6,8 @@ app.use(cors())
 app.use(express.json())
 const pool = require('./db')
 
+// get profiles
+
 app.get('/:handle',async (req,res)=>{
 
     const {handle} = req.params
@@ -17,7 +19,15 @@ app.get('/:handle',async (req,res)=>{
 
 });
 
+// get threads
 
+app.get('/',async(req,res)=>{
+
+    try{
+        const threads = await pool.query('SELECT * FROM threads;')
+        res.json(threads.rows)
+    }catch(err){console.error(err)}
+})
 
 
 

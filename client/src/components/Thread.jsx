@@ -22,7 +22,7 @@ const Icons=styled.div`
         width: 20px;
     }
 `
-const Thread =({user})=>{
+const Thread =({user,thread})=>{
     return (
        <FeedCard>
          <TextContainer>
@@ -30,7 +30,7 @@ const Thread =({user})=>{
              <p><strong>{user.handle}</strong></p>
              <p style={{color:'rgb(114,114,114)'}}>21/05/2024</p>
          </TextContainer>
-           <p>text</p>
+           <p>{thread.text}</p>
            <Icons>
                <svg clipRule="evenodd" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2"
                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

@@ -4,10 +4,10 @@ import PopUp from "./PopUp.jsx";
 
 const FeedContainer = styled.div``
 
-const Feed = ({user})=>{
+const Feed = ({user,threads})=>{
     return (
         <FeedContainer>
-            <Thread user={user}></Thread>
+            {threads.forEach(thread=><Thread thread={thread}></Thread>)}
         </FeedContainer>
     )
 }
