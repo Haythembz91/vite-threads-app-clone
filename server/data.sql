@@ -39,3 +39,5 @@ CREATE TABLE replies (
     thread_Id VARCHAR (255) PRIMARY KEY,
     replies VARCHAR (255)
     );
+
+

@@ -7,7 +7,7 @@ const FeedContainer = styled.div``
 const Feed = ({user,threads})=>{
     return (
         <FeedContainer>
-            {threads.forEach(thread=><Thread thread={thread}></Thread>)}
+            {threads?.map(thread=><Thread key={thread.id} thread={thread} user={user}></Thread>)}
         </FeedContainer>
     )
 }

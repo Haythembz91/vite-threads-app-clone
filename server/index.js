@@ -8,7 +8,7 @@ const pool = require('./db')
 
 // get profiles
 
-app.get('/:handle',async (req,res)=>{
+app.get('/users/:handle',async (req,res)=>{
 
     const {handle} = req.params
     try{
@@ -21,14 +21,35 @@ app.get('/:handle',async (req,res)=>{
 
 // get threads
 
-app.get('/',async(req,res)=>{
+app.get('/:handle/threads',async(req,res)=>{
+        const {handle}=req.params
+    try{
+        const threads = await pool.query('SELECT * FROM threads WHERE thread_from=$1;',[handle])
+        res.json(threads.rows)
+    }catch(err){console.error(err)}
+})
+
+// get all users & threads
+
+app.get('/users',async (req,res)=>{
+
+
+    try{
+        const users = await pool.query('SELECT * FROM profiles;')
+        res.json(users.rows)
+    }catch(err){console.error(err)}
+
+});
+
+// get threads
+
+app.get('/threads',async(req,res)=>{
 
     try{
         const threads = await pool.query('SELECT * FROM threads;')
         res.json(threads.rows)
     }catch(err){console.error(err)}
 })
-
 
 
 

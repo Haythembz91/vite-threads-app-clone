@@ -56,7 +56,7 @@ const ButtonContainer = styled.div`
 
 
 
-const Profile = ({user,followers})=>{
+const Profile = ({user,followers,threads})=>{
 
     const [mode,setMode] = useState('threads')
 
@@ -91,7 +91,7 @@ const Profile = ({user,followers})=>{
                     </button>
                 </ButtonContainer>
             </header>
-            <Feed user={user}></Feed>
+            <Feed threads={threads} user={user}></Feed>
         </div>
     )
 }
