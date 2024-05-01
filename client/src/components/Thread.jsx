@@ -2,6 +2,7 @@ import styled from "styled-components";
 import {Link,Route,Routes} from 'react-router-dom'
 import Home from "../pages/Home.jsx";
 import Profile from "../pages/Profile.jsx";
+import User from '../pages/User.jsx'
 
 const FeedCard = styled.article`
     border-bottom: 1px solid rgb(114,114,114);
@@ -25,12 +26,16 @@ const Icons=styled.div`
     }
 `
 const Thread =({user,thread})=>{
+
+
+
+
     return (
         <FeedCard>
 
             <TextContainer>
                 <img src={user.img} alt={'avatar image'}/>
-                <Link to={`/${thread.thread_from}`}><p><strong>{thread.thread_from}</strong></p></Link>
+                <Link to={`/users/${thread.thread_from}`}><p><strong>{thread.thread_from}</strong></p></Link>
                 <p style={{color: 'rgb(114,114,114)'}}>{Math.ceil((new Date() - new Date(thread.time_stamp)) / (1000 * 60)) >= 60 ? Math.floor((new Date() - new Date(thread.time_stamp)) / (1000 * 60 * 60)) + 'h' : Math.ceil((new Date() - new Date(thread.time_stamp)) / (1000 * 60)) + 'min'}</p>
             </TextContainer>
             <p>{thread.text}</p>

@@ -5,6 +5,7 @@ import PopUp from './components/PopUp.jsx'
 import {Route,Routes} from "react-router-dom";
 import Profile from './pages/Profile.jsx'
 import {useEffect, useState} from "react";
+import User from "./pages/User.jsx";
 
 
 const App = ()=>{
@@ -26,7 +27,6 @@ const App = ()=>{
         const response = await fetch(`http://localhost:8000/${handle}/threads`)
         const data = await response.json()
         setThreads(data.sort((a,b)=>new Date(b.time_stamp)-new Date(a.time_stamp)))
-
     }
 
     useEffect( ()=>{
@@ -43,7 +43,7 @@ const App = ()=>{
             <div>
                 <Routes>
                     <Route path={"/"} element={<Home/>}></Route>
-                    <Route path={`/${user.handle}`} element={<Profile user={user} threads={threads} followers={followers}/>}></Route>
+                    <Route path={`/user/:user`} element={<Profile user={user} threads={threads} followers={followers}/>}></Route>
                 </Routes>
             </div>
             {showModal && <PopUp setShowModal={setShowModal}></PopUp>}
