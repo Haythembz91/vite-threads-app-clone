@@ -1,8 +1,7 @@
 import styled from "styled-components";
-import {Link,Route,Routes} from 'react-router-dom'
-import Home from "../pages/Home.jsx";
-import Profile from "../pages/Profile.jsx";
-import User from '../pages/User.jsx'
+import {Link} from 'react-router-dom'
+import {ImageContainer} from "../pages/Profile.jsx";
+
 
 const FeedCard = styled.article`
     border-bottom: 1px solid rgb(114,114,114);
@@ -12,12 +11,11 @@ const FeedCard = styled.article`
     }
 `
 export const TextContainer = styled.div`
-    img{
-        width: 40px;
-        border-radius: 50%;
-    }
     display: flex;
-    
+`
+const Img = styled(ImageContainer)`
+    width: 40px;
+    height: 40px;
 `
 const Icons=styled.div`
     svg{
@@ -34,7 +32,7 @@ const Thread =({user,thread})=>{
         <FeedCard>
 
             <TextContainer>
-                <img src={user.img} alt={'avatar image'}/>
+                <Img><img src={user[0].img} alt={'avatar image'}/></Img>
                 <Link to={`/users/${thread.thread_from}`}><p><strong>{thread.thread_from}</strong></p></Link>
                 <p style={{color: 'rgb(114,114,114)'}}>{Math.ceil((new Date() - new Date(thread.time_stamp)) / (1000 * 60)) >= 60 ? Math.floor((new Date() - new Date(thread.time_stamp)) / (1000 * 60 * 60)) + 'h' : Math.ceil((new Date() - new Date(thread.time_stamp)) / (1000 * 60)) + 'min'}</p>
             </TextContainer>

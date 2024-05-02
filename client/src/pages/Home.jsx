@@ -5,8 +5,8 @@ import {useEffect, useState} from "react";
 
 const Home = ()=>{
 
-    const [users,setUsers]=useState('kubowania')
-    const [threads,setThreads]=useState(null)
+    const [users,setUsers]=useState([])
+    const [threads,setThreads]=useState([])
 
 
     const getUsers = async()=>{
@@ -27,12 +27,11 @@ const Home = ()=>{
         getThreads()
     },[])
 
-    console.log(threads,users)
 
 
     return (
         <div className={'profile-page-container'}>
-            <Feed user={users} threads={threads}></Feed>
+            <Feed users={users} threads={threads}></Feed>
         </div>
 
     )

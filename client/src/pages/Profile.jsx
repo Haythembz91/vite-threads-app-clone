@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {useEffect, useState} from "react";
 import Feed from './../components/Feed.jsx'
+import {useParams} from "react-router-dom";
 
 
 const UserInfoContainer = styled.div`
@@ -22,7 +23,7 @@ const InfoContainer = styled.div`
     display: flex;
     justify-content: space-between;
 `
-const ImageContainer = styled.div`
+export const ImageContainer = styled.div`
   width: 90px;
   height: 90px;
   border-radius: 50%;
@@ -56,9 +57,32 @@ const ButtonContainer = styled.div`
 
 
 
-const Profile = ({user,followers,threads})=>{
+const Profile = ()=>{
 
     const [mode,setMode] = useState('threads')
+    const [user,setUser]=useState('')
+    const [threads,setThreads]=useState({})
+    const [followers,setFollowers]=useState(0)
+    const {slug} = useParams()
+    console.log(slug)
+    const getUserData = async()=>{
+        const response  = await fetch(`http://localhost:8000/users/${slug}`)
+        const data = await response.json()
+        setUser(data.users[0])
+        setFollowers(data.followers[0].count)
+    }
+
+    const getThreads = async()=>{
+        const response = await fetch(`http://localhost:8000/${slug}/threads`)
+        const data = await response.json()
+        setThreads(data.sort((a,b)=>new Date(b.time_stamp)-new Date(a.time_stamp)))
+    }
+
+    useEffect( ()=>{
+        getUserData()
+        getThreads()
+    },[])
+
 
 
     return(
@@ -91,7 +115,7 @@ const Profile = ({user,followers,threads})=>{
                     </button>
                 </ButtonContainer>
             </header>
-            <Feed threads={threads} user={user}></Feed>
+
         </div>
     )
 }
