@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {TextContainer} from './Thread.jsx'
+import {TextContainer,Img} from './Thread.jsx'
 
 
 
@@ -51,11 +51,13 @@ const ThreadInput = ({setShowModal})=>{
                 </svg>
             </CloseButton>
             <TextContainer>
-                <img src={'https://scrimba.com/avatars/uid/uN32gmcm/64'} alt={'avatar image'}/>
+                <Img>
+                    <img src={'https://scrimba.com/avatars/uid/uN32gmcm/64'} alt={'avatar image'}/>
+                </Img>
                 <p><strong>handle</strong></p>
             </TextContainer>
             <input placeholder={'Start a thread...'}/>
-            <button className={'primary'}>Post</button>
+            <button style={{width:'100%'}} className={'primary'}>Post</button>
         </ThreadInputContainer>
     )
 }

@@ -57,11 +57,11 @@ const ButtonContainer = styled.div`
 
 
 
-const Profile = ()=>{
+const Profile = ({users,threads})=>{
 
     const [mode,setMode] = useState('threads')
     const [user,setUser]=useState([])
-    const [threads,setThreads]=useState([])
+
     const [followers,setFollowers]=useState(0)
     const {slug} = useParams()
 
@@ -71,22 +71,16 @@ const Profile = ()=>{
     const getUserData = async()=>{
         const response  = await fetch(`http://localhost:8000/users/${slug}`)
         const data = await response.json()
-        setUser(data.users)
+        setUser(data.users[0])
         setFollowers(data.followers[0].count)
     }
 
-    const getThreads = async()=>{
-        const response = await fetch(`http://localhost:8000/${slug}/threads`)
-        const data = await response.json()
-        setThreads(data.sort((a,b)=>new Date(b.time_stamp)-new Date(a.time_stamp)))
-    }
+
 
     useEffect( ()=>{
         getUserData()
-        getThreads()
     },[])
 
-console.log(user)
 
     return(
         <div className={'profile-page-container'}>
@@ -102,9 +96,15 @@ console.log(user)
                 </InfoContainer>
                 <p>{user.bio}</p>
                 <SubInfoContainer>
-                    <p style={{color: 'rgb(114, 114, 114)'}}>{followers} followers · <a href={user.link} target={'_blank'}>{user.link}</a></p>
+                    <p style={{color: 'rgb(114, 114, 114)'}}>{followers} followers · <a href={user.link}
+                                                                                        target={'_blank'}>{user.link}</a>
+                    </p>
                 </SubInfoContainer>
-                <button className={'primary'}>Share profile</button>
+                <div style={{textAlign:'center'}}>
+                    <button className={'primary'}>Follow</button>
+                    <button className={'primary'}>Share profile</button>
+                </div>
+
                 <ButtonContainer>
                     <button style={mode === 'threads' ? {
                         color: 'rgb(250,250,250)',
@@ -118,7 +118,7 @@ console.log(user)
                     </button>
                 </ButtonContainer>
             </header>
-        <Feed users={user} threads={threads}></Feed>
+            {mode === 'threads' ? <Feed users={users} threads={threads.filter(thread=>thread.thread_from===slug)}></Feed>:<h1>Replies</h1>}
         </div>
     )
 }

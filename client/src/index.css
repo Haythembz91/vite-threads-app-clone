@@ -33,12 +33,13 @@ button.primary{
     border: rgb(114,114,114) solid 1px;
     background-color: transparent;
     padding: 7px;
-    margin: 15px 0;
+    margin: 15px 5px;
     border-radius: 7px;
     color: rgb(250,250,250);
     font-weight: bold;
-    width: 100%;
+    width: 48%;
     cursor: pointer;
+
 }
 
 .profile-page-container{

@@ -13,7 +13,7 @@ const FeedCard = styled.article`
 export const TextContainer = styled.div`
     display: flex;
 `
-const Img = styled(ImageContainer)`
+export const Img = styled(ImageContainer)`
     width: 40px;
     height: 40px;
 `
