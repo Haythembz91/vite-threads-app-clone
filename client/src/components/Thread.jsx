@@ -27,7 +27,6 @@ const Thread =({user,thread})=>{
 
 
 
-
     return (
         <FeedCard>
 

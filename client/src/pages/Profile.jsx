@@ -60,15 +60,18 @@ const ButtonContainer = styled.div`
 const Profile = ()=>{
 
     const [mode,setMode] = useState('threads')
-    const [user,setUser]=useState('')
-    const [threads,setThreads]=useState({})
+    const [user,setUser]=useState([])
+    const [threads,setThreads]=useState([])
     const [followers,setFollowers]=useState(0)
     const {slug} = useParams()
+
     console.log(slug)
+
+
     const getUserData = async()=>{
         const response  = await fetch(`http://localhost:8000/users/${slug}`)
         const data = await response.json()
-        setUser(data.users[0])
+        setUser(data.users)
         setFollowers(data.followers[0].count)
     }
 
@@ -83,7 +86,7 @@ const Profile = ()=>{
         getThreads()
     },[])
 
-
+console.log(user)
 
     return(
         <div className={'profile-page-container'}>
@@ -115,7 +118,7 @@ const Profile = ()=>{
                     </button>
                 </ButtonContainer>
             </header>
-
+        <Feed users={user} threads={threads}></Feed>
         </div>
     )
 }
