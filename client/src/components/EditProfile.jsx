@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import {TextContainer,Img} from './Thread.jsx'
-
+import {useCookies} from "react-cookie";
 
 
 const ThreadInputContainer = styled.div`
@@ -40,6 +40,8 @@ const CloseButton = styled.div`
 `
 const ThreadInput = ({setShowEdit})=>{
 
+    const [cookies,setCookie,removeCookie]=useCookies()
+
     return (
         <ThreadInputContainer>
             <CloseButton>
@@ -52,9 +54,9 @@ const ThreadInput = ({setShowEdit})=>{
             </CloseButton>
             <TextContainer>
                 <Img>
-                    <img src={'https://scrimba.com/avatars/uid/uN32gmcm/64'} alt={'avatar image'}/>
+                    <img src={''} alt={'avatar image'}/>
                 </Img>
-                <p><strong>handle</strong></p>
+                <p><strong>{''}</strong></p>
             </TextContainer>
             <input placeholder={'Start a thread...'}/>
             <button style={{width:'100%'}} className={'primary'}>Post</button>

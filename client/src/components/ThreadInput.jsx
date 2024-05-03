@@ -38,7 +38,7 @@ const CloseButton = styled.div`
         }
     }
 `
-const ThreadInput = ({setShowModal})=>{
+const ThreadInput = ({setShowModal,user})=>{
 
     return (
         <ThreadInputContainer>
@@ -52,9 +52,9 @@ const ThreadInput = ({setShowModal})=>{
             </CloseButton>
             <TextContainer>
                 <Img>
-                    <img src={'https://scrimba.com/avatars/uid/uN32gmcm/64'} alt={'avatar image'}/>
+                    <img src={user.img} alt={'avatar image'}/>
                 </Img>
-                <p><strong>handle</strong></p>
+                <p><strong>{user.handle}</strong></p>
             </TextContainer>
             <input placeholder={'Start a thread...'}/>
             <button style={{width:'100%'}} className={'primary'}>Post</button>

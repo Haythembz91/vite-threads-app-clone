@@ -7,14 +7,15 @@ import Profile from './pages/Profile.jsx'
 import {useEffect, useState} from "react";
 import Auth from './components/Auth.jsx'
 import {useCookies} from "react-cookie";
+import EditProfile from "./components/EditProfile";
 
 
 const App = ()=>{
 
     const [cookies,setCookie,removeCookie]=useCookies()
     const [showModal,setShowModal]=useState(false)
-    const user = cookies.Handle
     const [users,setUsers]=useState([])
+    const user = users.filter(user=>user.handle===cookies.Handle)[0]
     const [threads,setThreads]=useState([])
     const authToken = cookies.AuthToken
 
@@ -39,7 +40,6 @@ const App = ()=>{
 
     },[])
 
-
     return(
         <>
             {authToken&&<div className={'app'}>
@@ -50,7 +50,7 @@ const App = ()=>{
                         <Route path={'/users/:slug'} element={<Profile users={users} threads={threads}/>}></Route>
                     </Routes>
                 </div>
-                {showModal && <PopUp setShowModal={setShowModal}></PopUp>}
+                {showModal && <PopUp user={user} setShowModal={setShowModal}></PopUp>}
             </div>}
             {!authToken&&<Auth></Auth>}
         </>
