@@ -5,7 +5,7 @@ import PopUp from './components/PopUp.jsx'
 import {Route,Routes} from "react-router-dom";
 import Profile from './pages/Profile.jsx'
 import {useEffect, useState} from "react";
-
+import Auth from './components/Auth.jsx'
 
 
 const App = ()=>{
@@ -14,7 +14,7 @@ const App = ()=>{
     const user = 'kubowania'
     const [users,setUsers]=useState([])
     const [threads,setThreads]=useState([])
-
+    const authToken = false
 
     const getUsers = async()=>{
         const response  = await fetch(`http://localhost:8000/users/`)
@@ -37,16 +37,20 @@ const App = ()=>{
 
 
     return(
-        <div className={'app'}>
-            <Header setShowModal={setShowModal} user={user}></Header>
-            <div>
-                <Routes>
-                    <Route path={""} element={<Home users={users} threads={threads}/>}></Route>
-                    <Route path={'/users/:slug'} element={<Profile users={users} threads={threads}/>}></Route>
-                </Routes>
-            </div>
-            {showModal && <PopUp setShowModal={setShowModal}></PopUp>}
-        </div>
+        <>
+            {authToken&&<div className={'app'}>
+                <Header setShowModal={setShowModal} user={user}></Header>
+                <div>
+                    <Routes>
+                        <Route path={""} element={<Home users={users} threads={threads}/>}></Route>
+                        <Route path={'/users/:slug'} element={<Profile users={users} threads={threads}/>}></Route>
+                    </Routes>
+                </div>
+                {showModal && <PopUp setShowModal={setShowModal}></PopUp>}
+            </div>}
+            {!authToken&&<Auth></Auth>}
+        </>
+
     )
 }
 

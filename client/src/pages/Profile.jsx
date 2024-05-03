@@ -96,8 +96,7 @@ const Profile = ({users,threads})=>{
                 </InfoContainer>
                 <p>{user.bio}</p>
                 <SubInfoContainer>
-                    <p style={{color: 'rgb(114, 114, 114)'}}>{followers} followers · <a href={user.link}
-                                                                                        target={'_blank'}>{user.link}</a>
+                    <p style={{color: 'rgb(114, 114, 114)'}}>{followers} followers · <a href={user.link} target={'_blank'}>{user.link}</a>
                     </p>
                 </SubInfoContainer>
                 <div style={{textAlign:'center'}}>

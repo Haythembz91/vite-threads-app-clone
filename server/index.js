@@ -5,6 +5,9 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 const pool = require('./db')
+const jwt = require('jsonwebtoken')
+const {v4:uuidv4} = require ('uuid')
+const bcrypt = require('bcrypt')
 
 // get profiles
 
@@ -18,16 +21,6 @@ app.get('/users/:handle',async (req,res)=>{
     }catch(err){console.error(err)}
 
 });
-
-// get threads
-
-app.get('/:handle/threads',async(req,res)=>{
-        const {handle}=req.params
-    try{
-        const threads = await pool.query('SELECT * FROM threads WHERE thread_from=$1;',[handle])
-        res.json(threads.rows)
-    }catch(err){console.error(err)}
-})
 
 // get all users & threads
 
