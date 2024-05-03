@@ -44,7 +44,18 @@ app.get('/threads',async(req,res)=>{
     }catch(err){console.error(err)}
 })
 
+// SIGN UP
 
+app.post('/signup',async (req,res)=>{
+
+
+
+
+
+
+
+
+})
 
 
 

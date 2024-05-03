@@ -50,11 +50,15 @@ const AuthOptions=styled.div`
 
 const Auth = ()=>{
     const [isLogIn,setIsLogIn]=useState(false)
-    const [email,setEmail]=useState(null)
+    const [handle,setHandle]=useState(null)
+    const [username,setUsername]=useState(null)
+    const [avatarLink,setAvatarLink]=useState(null)
     const [password,setPassword]=useState(null)
     const [confirmPassword,setConfirmPassword]=useState(null)
     const [error,setError]=useState(null)
     const [cookies,setCookie,removeCookie] = useCookies(null)
+
+
 
     const viewLogin = (status)=>{
         setError(null)
@@ -74,9 +78,12 @@ const Auth = ()=>{
             <AuthContainerBox>
                 <form action="">
                     <h2>{isLogIn?'Login':'Sign Up'}</h2>
-                    <input required={true} type="email" placeholder='email' onChange={(e)=>setEmail(e.target.value)} />
+                    <input required={true} type="text" placeholder='username' onChange={(e)=>setUsername(e.target.value)} />
+                    {!isLogIn && <input type="text" placeholder='@handle' onChange={e=>setHandle(e.target.value)} />}
+                    {!isLogIn && <input type="text" placeholder='avatar link' onChange={e=>setAvatarLink(e.target.value)} />}
                     <input required={true} type="password" placeholder='password' onChange={e=>setPassword(e.target.value)} />
                     {!isLogIn && <input type="password" placeholder='confirm password' onChange={e=>setConfirmPassword(e.target.value)} />}
+
                     <input type="submit" value={isLogIn?'Login':'Sign Up'} onClick={(e)=>handleSubmit(e,isLogIn?'login':'signup')} />
                     {error && <p>{error}</p>}
                 </form>
