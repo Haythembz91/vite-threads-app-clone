@@ -71,6 +71,21 @@ const Auth = ()=>{
             setError("Passwords don't match")
             return
         }
+        const response = await fetch(`http://localhost:8000/users/${endpoint}`,{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({handle, username, password})
+        })
+        const data = await response.json()
+        if(data.detail){
+            setError(data.detail)
+        }else{
+            setCookie('Handle',data.handle)
+            setCookie('AuthToken',data.token)
+            window.location.reload()
+        }
+
+
     }
 
     return(
@@ -78,9 +93,9 @@ const Auth = ()=>{
             <AuthContainerBox>
                 <form action="">
                     <h2>{isLogIn?'Login':'Sign Up'}</h2>
-                    <input required={true} type="text" placeholder='username' onChange={(e)=>setUsername(e.target.value)} />
-                    {!isLogIn && <input type="text" placeholder='@handle' onChange={e=>setHandle(e.target.value)} />}
-                    {!isLogIn && <input type="text" placeholder='avatar link' onChange={e=>setAvatarLink(e.target.value)} />}
+                    {!isLogIn && <input required={true} type="text" placeholder='username'
+                            onChange={(e) => setUsername(e.target.value)}/>}
+                    <input required={true} type="text" placeholder='@handle' onChange={e=>setHandle(e.target.value)} />
                     <input required={true} type="password" placeholder='password' onChange={e=>setPassword(e.target.value)} />
                     {!isLogIn && <input type="password" placeholder='confirm password' onChange={e=>setConfirmPassword(e.target.value)} />}
 

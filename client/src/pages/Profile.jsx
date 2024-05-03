@@ -2,6 +2,8 @@ import styled from "styled-components";
 import {useEffect, useState} from "react";
 import Feed from './../components/Feed.jsx'
 import {useParams} from "react-router-dom";
+import {useCookies} from "react-cookie";
+import EditProfile from "../components/EditProfile.jsx";
 
 
 const UserInfoContainer = styled.div`
@@ -61,11 +63,11 @@ const Profile = ({users,threads})=>{
 
     const [mode,setMode] = useState('threads')
     const [user,setUser]=useState([])
-
+    const [cookies,setCookie,removeCookie]=useCookies()
     const [followers,setFollowers]=useState(0)
     const {slug} = useParams()
+    const [showEdit,setShowEdit]=useState(false)
 
-    console.log(slug)
 
 
     const getUserData = async()=>{
@@ -81,7 +83,7 @@ const Profile = ({users,threads})=>{
         getUserData()
     },[])
 
-
+    console.log(user.handle,cookies.Handle)
     return(
         <div className={'profile-page-container'}>
             <header>
@@ -100,10 +102,9 @@ const Profile = ({users,threads})=>{
                     </p>
                 </SubInfoContainer>
                 <div style={{textAlign:'center'}}>
-                    <button className={'primary'}>Follow</button>
-                    <button className={'primary'}>Share profile</button>
+                    {slug!==cookies.Handle&&<button className={'primary'}>Follow</button>}
+                    {slug===cookies.Handle&&<button className={'primary'} onClick={()=>setShowEdit(true)} >Edit Profile</button>}
                 </div>
-
                 <ButtonContainer>
                     <button style={mode === 'threads' ? {
                         color: 'rgb(250,250,250)',
@@ -117,6 +118,7 @@ const Profile = ({users,threads})=>{
                     </button>
                 </ButtonContainer>
             </header>
+            {showEdit&&<EditProfile setShowEdit={setShowEdit}/>}
             {mode === 'threads' ? <Feed users={users} threads={threads.filter(thread=>thread.thread_from===slug)}></Feed>:<h1>Replies</h1>}
         </div>
     )

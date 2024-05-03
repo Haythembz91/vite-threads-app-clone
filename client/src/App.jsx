@@ -6,15 +6,17 @@ import {Route,Routes} from "react-router-dom";
 import Profile from './pages/Profile.jsx'
 import {useEffect, useState} from "react";
 import Auth from './components/Auth.jsx'
+import {useCookies} from "react-cookie";
 
 
 const App = ()=>{
 
+    const [cookies,setCookie,removeCookie]=useCookies()
     const [showModal,setShowModal]=useState(false)
-    const user = 'kubowania'
+    const user = cookies.Handle
     const [users,setUsers]=useState([])
     const [threads,setThreads]=useState([])
-    const authToken = false
+    const authToken = cookies.AuthToken
 
     const getUsers = async()=>{
         const response  = await fetch(`http://localhost:8000/users/`)
@@ -30,16 +32,18 @@ const App = ()=>{
     }
 
     useEffect( ()=>{
-        getUsers()
-        getThreads()
-    },[])
+        if(authToken){
+            getUsers()
+            getThreads()
+        }
 
+    },[])
 
 
     return(
         <>
             {authToken&&<div className={'app'}>
-                <Header setShowModal={setShowModal} user={user}></Header>
+                <Header setShowModal={setShowModal} ></Header>
                 <div>
                     <Routes>
                         <Route path={""} element={<Home users={users} threads={threads}/>}></Route>
