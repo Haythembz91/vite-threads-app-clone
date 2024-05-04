@@ -49,7 +49,8 @@ const AuthOptions=styled.div`
 
 
 const Auth = ()=>{
-    const [isLogIn,setIsLogIn]=useState(false)
+
+    const [isLogIn,setIsLogIn]=useState(true)
     const [handle,setHandle]=useState(null)
     const [username,setUsername]=useState(null)
     const [avatarLink,setAvatarLink]=useState(null)
