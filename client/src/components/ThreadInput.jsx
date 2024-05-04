@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import {TextContainer,Img} from './Thread.jsx'
+import {useState} from "react";
 
 
 
@@ -38,7 +39,24 @@ const CloseButton = styled.div`
         }
     }
 `
-const ThreadInput = ({setShowModal,user})=>{
+const ThreadInput = ({setShowModal,user,getThreads})=>{
+
+    const poster = user.handle
+    const [thread,setThread] = useState('')
+    const time = new Date()
+
+    const handleSubmit = async ()=>{
+        setShowModal(false)
+
+        const response = await fetch('http://localhost:8000/post',{
+            method:'POST',
+            headers: {'Content-Type': 'application/json'},
+            body:JSON.stringify({poster,thread,time})
+        })
+        const data = await response.json()
+        getThreads()
+
+    }
 
     return (
         <ThreadInputContainer>
@@ -56,8 +74,8 @@ const ThreadInput = ({setShowModal,user})=>{
                 </Img>
                 <p><strong>{user.handle}</strong></p>
             </TextContainer>
-            <input placeholder={'Start a thread...'}/>
-            <button style={{width:'100%'}} className={'primary'}>Post</button>
+            <input type={'text'} onChange={e=>setThread(e.target.value)} placeholder={'Start a thread...'}/>
+            <button style={{width:'100%'}} className={'primary'} onClick={()=>handleSubmit()}>Post</button>
         </ThreadInputContainer>
     )
 }

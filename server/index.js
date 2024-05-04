@@ -71,6 +71,7 @@ app.post('/users/signup',async (req,res)=>{
 app.post('/users/login',async(req,res)=>{
 
     const {handle,password}=req.body
+
     try{
         const user = await pool.query('SELECT * FROM users WHERE username=$1;',[handle])
         if(!user.rows.length){
@@ -86,7 +87,16 @@ app.post('/users/login',async(req,res)=>{
     }catch(error){
         console.error(error)
     }
+})
 
+app.post('/post',async(req,res)=>{
+
+    const {poster,thread,time}=req.body
+    const id = uuidv4()
+    try{
+        const post = pool.query('INSERT INTO threads(id,time_stamp,thread_from,text)VALUES($1,$2,$3,$4);',[id,time,poster,thread])
+        res.json(post.rows)
+    }catch (error){console.log(error)}
 
 
 

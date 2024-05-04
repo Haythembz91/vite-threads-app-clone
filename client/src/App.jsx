@@ -7,7 +7,7 @@ import Profile from './pages/Profile.jsx'
 import {useEffect, useState} from "react";
 import Auth from './components/Auth.jsx'
 import {useCookies} from "react-cookie";
-import EditProfile from "./components/EditProfile";
+
 
 
 const App = ()=>{
@@ -50,7 +50,7 @@ const App = ()=>{
                         <Route path={'/users/:slug'} element={<Profile users={users} threads={threads}/>}></Route>
                     </Routes>
                 </div>
-                {showModal && <PopUp user={user} setShowModal={setShowModal}></PopUp>}
+                {showModal && <PopUp getThreads={getThreads} user={user} setShowModal={setShowModal}></PopUp>}
             </div>}
             {!authToken&&<Auth></Auth>}
         </>
