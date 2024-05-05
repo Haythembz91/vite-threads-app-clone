@@ -45,17 +45,19 @@ const ThreadInput = ({setShowModal,user,getThreads})=>{
     const [thread,setThread] = useState('')
     const time = new Date()
 
-    const handleSubmit = async ()=>{
-        setShowModal(false)
-
-        const response = await fetch('http://localhost:8000/post',{
-            method:'POST',
-            headers: {'Content-Type': 'application/json'},
-            body:JSON.stringify({poster,thread,time})
-        })
-        const data = await response.json()
-        getThreads()
-
+    const handleSubmit = async (e)=>{
+        e.preventDefault()
+        try{
+            const response = await fetch('http://localhost:8000/post',{
+                method:'POST',
+                headers: {'Content-Type': 'application/json'},
+                body:JSON.stringify({poster,thread,time})
+            })
+            if (response.status===200){
+                setShowModal(false)
+                getThreads()
+            }
+        }catch(error){console.error(error)}
     }
 
     return (
@@ -75,7 +77,7 @@ const ThreadInput = ({setShowModal,user,getThreads})=>{
                 <p><strong>{user.handle}</strong></p>
             </TextContainer>
             <input type={'text'} onChange={e=>setThread(e.target.value)} placeholder={'Start a thread...'}/>
-            <button style={{width:'100%'}} className={'primary'} onClick={()=>handleSubmit()}>Post</button>
+            <button style={{width:'100%'}} className={'primary'} onClick={handleSubmit}>Post</button>
         </ThreadInputContainer>
     )
 }
