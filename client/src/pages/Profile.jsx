@@ -83,7 +83,7 @@ const Profile = ({users,threads})=>{
         getUserData()
     },[])
 
-    console.log(user.handle,cookies.Handle)
+
     return(
         <div className={'profile-page-container'}>
             <header>
@@ -118,7 +118,7 @@ const Profile = ({users,threads})=>{
                     </button>
                 </ButtonContainer>
             </header>
-            {showEdit&&<EditProfile setShowEdit={setShowEdit}/>}
+            {showEdit&&<EditProfile getUserData={getUserData} user={user} setShowEdit={setShowEdit}/>}
             {mode === 'threads' ? <Feed users={users} threads={threads.filter(thread=>thread.thread_from===slug)}></Feed>:<h1>Replies</h1>}
         </div>
     )

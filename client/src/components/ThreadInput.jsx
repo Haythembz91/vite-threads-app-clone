@@ -55,6 +55,7 @@ const ThreadInput = ({setShowModal,user,getThreads})=>{
             })
             if (response.status===200){
                 setShowModal(false)
+                console.log('posted')
                 getThreads()
             }
         }catch(error){console.error(error)}

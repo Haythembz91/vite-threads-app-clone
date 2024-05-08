@@ -40,10 +40,12 @@ const App = ()=>{
 
     },[])
 
+
+
     return(
         <>
             {authToken&&<div className={'app'}>
-                <Header setShowModal={setShowModal} ></Header>
+                <Header user={user} setShowModal={setShowModal} ></Header>
                 <div>
                     <Routes>
                         <Route path={""} element={<Home users={users} threads={threads}/>}></Route>

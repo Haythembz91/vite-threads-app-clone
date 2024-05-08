@@ -1,27 +1,37 @@
 import styled from "styled-components";
-import {TextContainer,Img} from './Thread.jsx'
 import {useCookies} from "react-cookie";
+import {useState} from "react";
 
 
 const ThreadInputContainer = styled.div`
-    background-color: rgb(38,38,38);
+    position: absolute;
+    top: 0px;
+    color: rgb(250,250,250);
+    background-color: #101010;
     width: 50%;
-    height: 250px;
     border-radius: 20px ;
     padding: 20px;
     input{
         background-color: transparent;
         border: none;
+        color: rgb(250,250,250);
+        border-bottom: rgb(38,38,38) 1px solid;
         padding:10px;
         margin:10px 0;
         width: 100%;
         box-sizing: border-box;
-        border-radius: 10px;
-        color: rgb(250,250,250);
+        font-family: "Segoe UI",Arial,sans-serif;
         &:focus{
             outline: none;
         }
     }
+  button{
+    background-color: rgb(250,250,250);
+    color: #101010;
+    padding: 20px;
+    font-size: 12px;
+    border-radius: 20px;
+  }
 `
 
 const CloseButton = styled.div`
@@ -38,9 +48,36 @@ const CloseButton = styled.div`
         }
     }
 `
-const ThreadInput = ({setShowEdit})=>{
+const EditProfile = ({setShowEdit,user,getUserData})=>{
 
     const [cookies,setCookie,removeCookie]=useCookies()
+    const [name,setName]=useState(user.username)
+    const [avatar,setAvatar]=useState(user.img)
+    const [bio,setBio]=useState(user.bio)
+    const [link,setLink]=useState(user.link)
+    const [inst,setInst]=useState(user.inst_url)
+    const handle = user.handle
+
+    const handleEdit = async (e)=>{
+        e.preventDefault()
+        try{
+            const response = await fetch('http://localhost:8000/edit',{
+                method:'PUT',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({name,avatar,bio,link,inst,handle})
+            })
+            if (response.status===200){
+                getUserData()
+                setShowEdit(false)
+            }
+
+        }catch(error){
+            console.error(error)
+        }
+
+
+    }
+
 
     return (
         <ThreadInputContainer>
@@ -52,16 +89,21 @@ const ThreadInput = ({setShowEdit})=>{
                         fillRule="nonzero"/>
                 </svg>
             </CloseButton>
-            <TextContainer>
-                <Img>
-                    <img src={''} alt={'avatar image'}/>
-                </Img>
-                <p><strong>{''}</strong></p>
-            </TextContainer>
-            <input placeholder={'Start a thread...'}/>
-            <button style={{width:'100%'}} className={'primary'}>Post</button>
+            <form>
+                <label>Name</label>
+                <input type={'text'} value={name} onChange={e=>setName(e.target.value)}/>
+                <label>Avatar</label>
+                <input type={'text'} value={avatar} onChange={e=>setAvatar(e.target.value)}/>
+                <label>Bio</label>
+                <input type={'text'} value={bio} onChange={e=>setBio(e.target.value)}/>
+                <label>Link</label>
+                <input type={'text'} value={link} onChange={e=>setLink(e.target.value)}/>
+                <label>Instagram URL</label>
+                <input type={'text'} value={inst} onChange={e=>setInst(e.target.value)}/>
+            </form>
+            <button style={{width:'100%'}} className={'primary'} onClick={handleEdit}>Done</button>
         </ThreadInputContainer>
     )
 }
 
-export default ThreadInput
+export default EditProfile

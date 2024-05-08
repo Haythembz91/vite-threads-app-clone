@@ -53,7 +53,6 @@ app.post('/users/signup',async (req,res)=>{
     const salt = bcrypt.genSaltSync(10)
     const hashedPassword = bcrypt.hashSync(password,salt)
     const id = uuidv4()
-
     try{
         const signUp = await pool.query('INSERT INTO users(username,hashed_password)VALUES($1,$2);',[handle,hashedPassword])
         const addProfile = await pool.query('INSERT INTO profiles(id,username,handle)VALUES($1,$2,$3);',[id,username,handle])
@@ -93,10 +92,25 @@ app.post('/post',async(req,res)=>{
 
     const {poster,thread,time}=req.body
     const id = uuidv4()
+
     try{
         const post = pool.query('INSERT INTO threads(id,time_stamp,thread_from,text)VALUES($1,$2,$3,$4);',[id,time,poster,thread])
         res.json(post.rows)
     }catch (error){console.log(error)}
+})
+
+app.put('/edit',async(req,res)=>{
+
+    const {handle,name,avatar,bio,link,inst}=req.body
+    console.log(req.body)
+    try{
+        const edit = pool.query('UPDATE profiles SET username=$1, img=$2, bio=$3, link=$4, inst_url=$5 ' +
+            'WHERE handle=$6 ;',[name,avatar,bio,link,inst,handle])
+        res.json(edit.rows)
+    }catch(error){
+        console.error(error)
+    }
+
 
 
 
@@ -104,7 +118,6 @@ app.post('/post',async(req,res)=>{
 
 
 })
-
 
 
 
