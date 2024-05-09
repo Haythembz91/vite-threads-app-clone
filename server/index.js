@@ -102,7 +102,7 @@ app.post('/post',async(req,res)=>{
 app.put('/edit',async(req,res)=>{
 
     const {handle,name,avatar,bio,link,inst}=req.body
-    console.log(req.body)
+
     try{
         const edit = pool.query('UPDATE profiles SET username=$1, img=$2, bio=$3, link=$4, inst_url=$5 ' +
             'WHERE handle=$6 ;',[name,avatar,bio,link,inst,handle])
@@ -110,10 +110,18 @@ app.put('/edit',async(req,res)=>{
     }catch(error){
         console.error(error)
     }
+})
 
+app.put('/follow',async (req,res)=>{
 
-
-
+    const {leader,follower} = req.body
+    console.log(req.body)
+    try{
+        const follow = await pool.query('INSERT INTO followers(leader,follower)VALUES($1,$2);',[leader,follower])
+        res.json(follow.rows)
+    }catch(error){
+        console.error(error)
+    }
 
 
 

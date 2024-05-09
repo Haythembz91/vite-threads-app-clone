@@ -69,6 +69,7 @@ const EditProfile = ({setShowEdit,user,getUserData})=>{
             if (response.status===200){
                 getUserData()
                 setShowEdit(false)
+
             }
 
         }catch(error){
@@ -77,7 +78,6 @@ const EditProfile = ({setShowEdit,user,getUserData})=>{
 
 
     }
-
 
     return (
         <ThreadInputContainer>

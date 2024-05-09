@@ -12,7 +12,6 @@ const Header = ({setShowModal,user})=>{
         window.location.reload()
     }
 
-    console.log(user)
     return (
         <header className={'header'}>
             <svg style={{rotate:'180deg'}} onClick={handleSignOut} width="24" height="24" xmlns="http://www.w3.org/2000/svg" fillRule="evenodd" clipRule="evenodd">
@@ -31,7 +30,7 @@ const Header = ({setShowModal,user})=>{
                     <path
                         d="M21.172 24l-7.387-7.387c-1.388.874-3.024 1.387-4.785 1.387-4.971 0-9-4.029-9-9s4.029-9 9-9 9 4.029 9 9c0 1.761-.514 3.398-1.387 4.785l7.387 7.387-2.828 2.828zm-12.172-8c3.859 0 7-3.14 7-7s-3.141-7-7-7-7 3.14-7 7 3.141 7 7 7z"/>
                 </svg>
-                <svg onClick={() => setShowModal(true)} clipRule="evenodd" fillRule="evenodd" strokeLinejoin="round"
+                <svg onClick={()=>setShowModal(true)} clipRule="evenodd" fillRule="evenodd" strokeLinejoin="round"
                      strokeMiterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="m20 20h-15.25c-.414 0-.75.336-.75.75s.336.75.75.75h15.75c.53 0 1-.47 1-1v-15.75c0-.414-.336-.75-.75-.75s-.75.336-.75.75zm-1-17c0-.478-.379-1-1-1h-15c-.62 0-1 .519-1 1v15c0 .621.52 1 1 1h15c.478 0 1-.379 1-1zm-15.5.5h14v14h-14zm6.25 6.25h-3c-.414 0-.75.336-.75.75s.336.75.75.75h3v3c0 .414.336.75.75.75s.75-.336.75-.75v-3h3c.414 0 .75-.336.75-.75s-.336-.75-.75-.75h-3v-3c0-.414-.336-.75-.75-.75s-.75.336-.75.75z"

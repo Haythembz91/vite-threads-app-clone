@@ -5,6 +5,7 @@ import {ImageContainer} from "../pages/Profile.jsx";
 
 const FeedCard = styled.article`
     border-bottom: 1px solid rgb(114,114,114);
+    font-family: "Segoe UI",Arial,sans-serif;
     padding: 10px 0;
     span{
         color:rgb(114,114,114);

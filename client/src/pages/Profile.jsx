@@ -67,7 +67,8 @@ const Profile = ({users,threads})=>{
     const [followers,setFollowers]=useState(0)
     const {slug} = useParams()
     const [showEdit,setShowEdit]=useState(false)
-
+    const leader = slug
+    const follower = cookies.Handle
 
 
     const getUserData = async()=>{
@@ -76,11 +77,33 @@ const Profile = ({users,threads})=>{
         setUser(data.users[0])
         setFollowers(data.followers[0].count)
     }
+    const getFollowers = async()=>{
+        const response  = await fetch(`http://localhost:8000/users/${slug}`)
+        const data = await response.json()
+        setFollowers(data.followers[0].count)
+    }
+    const handleFollow = async (e)=>{
+        e.preventDefault()
+        try{
+            const response = await fetch('http://localhost:8000/follow',{
+                method:'PUT',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({leader,follower})
+            })
+            if(response.status===200){
+                getFollowers()
+            }
+
+        }catch(error){
+            console.error(error)
+        }
+    }
 
 
 
     useEffect( ()=>{
         getUserData()
+        getFollowers()
     },[])
 
 
@@ -102,7 +125,7 @@ const Profile = ({users,threads})=>{
                     </p>
                 </SubInfoContainer>
                 <div style={{textAlign:'center'}}>
-                    {slug!==cookies.Handle&&<button className={'primary'}>Follow</button>}
+                    {slug!==cookies.Handle&&<button className={'primary'} onClick={handleFollow}>Follow</button>}
                     {slug===cookies.Handle&&<button className={'primary'} onClick={()=>setShowEdit(true)} >Edit Profile</button>}
                 </div>
                 <ButtonContainer>
