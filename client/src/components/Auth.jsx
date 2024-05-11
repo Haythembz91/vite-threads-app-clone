@@ -96,7 +96,7 @@ const Auth = ()=>{
                     <h2>{isLogIn?'Login':'Sign Up'}</h2>
                     {!isLogIn && <input required={true} type="text" placeholder='username'
                             onChange={(e) => setUsername(e.target.value)}/>}
-                    <input required={true} type="text" placeholder='@handle' onChange={e=>setHandle(e.target.value)} />
+                    <input autoFocus required={true} type="text" placeholder='@handle' onChange={e=>setHandle(e.target.value)} />
                     <input required={true} type="password" placeholder='password' onChange={e=>setPassword(e.target.value)} />
                     {!isLogIn && <input type="password" placeholder='confirm password' onChange={e=>setConfirmPassword(e.target.value)} />}
 

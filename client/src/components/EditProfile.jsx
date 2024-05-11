@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import {useCookies} from "react-cookie";
 import {useState} from "react";
 
 
@@ -50,7 +49,7 @@ const CloseButton = styled.div`
 `
 const EditProfile = ({setShowEdit,user,getUserData})=>{
 
-    const [cookies,setCookie,removeCookie]=useCookies()
+
     const [name,setName]=useState(user.username)
     const [avatar,setAvatar]=useState(user.img)
     const [bio,setBio]=useState(user.bio)
@@ -58,17 +57,20 @@ const EditProfile = ({setShowEdit,user,getUserData})=>{
     const [inst,setInst]=useState(user.inst_url)
     const handle = user.handle
 
-    const handleEdit = async (e)=>{
-        e.preventDefault()
+    const handleEdit = async ()=>{
+        
         try{
             const response = await fetch('http://localhost:8000/edit',{
                 method:'PUT',
                 headers:{'Content-Type':'application/json'},
                 body:JSON.stringify({name,avatar,bio,link,inst,handle})
             })
+            
             if (response.status===200){
+                
                 getUserData()
                 setShowEdit(false)
+                window.location.reload
 
             }
 
@@ -78,7 +80,7 @@ const EditProfile = ({setShowEdit,user,getUserData})=>{
 
 
     }
-
+    
     return (
         <ThreadInputContainer>
             <CloseButton>

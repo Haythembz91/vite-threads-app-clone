@@ -122,11 +122,32 @@ app.put('/follow',async (req,res)=>{
     }catch(error){
         console.error(error)
     }
-
-
-
 })
 
+
+app.put('/unfollow',async (req,res)=>{
+
+    const {leader,follower} = req.body
+    console.log(req.body)
+    try{
+        const follow = await pool.query('DELETE FROM followers WHERE leader=$1 AND follower = $2;',[leader,follower])
+        res.json(follow.rows)
+    }catch(error){
+        console.error(error)
+    }
+})
+
+app.post('/like',async(req,res)=>{
+    const {threadId,userId}=req.body
+    console.log(req.body)
+    try{
+        const like = await pool.query('INSERT INTO likes(thread_id,user_id)VALUES($1,$2);',[threadId,userId])
+        const likes = await pool.query('SELECT COUNT(user_id) FROM likes WHERE thread_id=$1;',[threadId])
+        res.json(likes.rows)
+    }catch(error){
+        console.error(error)
+    }
+})
 
 
 

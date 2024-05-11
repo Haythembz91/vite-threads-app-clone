@@ -6,7 +6,7 @@ const FeedContainer = styled.div``
 
 const Feed = ({users,threads})=>{
 
-console.log(threads.length)
+
 
     return (
         <FeedContainer>

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import Feed from './../components/Feed.jsx'
 import {useParams} from "react-router-dom";
 import {useCookies} from "react-cookie";
@@ -69,6 +69,7 @@ const Profile = ({users,threads})=>{
     const [showEdit,setShowEdit]=useState(false)
     const leader = slug
     const follower = cookies.Handle
+    const [endPoint,setEndPoint]=useState('follow')
 
 
     const getUserData = async()=>{
@@ -85,12 +86,13 @@ const Profile = ({users,threads})=>{
     const handleFollow = async (e)=>{
         e.preventDefault()
         try{
-            const response = await fetch('http://localhost:8000/follow',{
+            const response = await fetch(`http://localhost:8000/${endPoint}`,{
                 method:'PUT',
                 headers:{'Content-Type':'application/json'},
                 body:JSON.stringify({leader,follower})
             })
             if(response.status===200){
+                endPoint==='Follow'? setEndPoint('Unfollow'):setEndPoint('Follow')
                 getFollowers()
             }
 
@@ -125,7 +127,7 @@ const Profile = ({users,threads})=>{
                     </p>
                 </SubInfoContainer>
                 <div style={{textAlign:'center'}}>
-                    {slug!==cookies.Handle&&<button className={'primary'} onClick={handleFollow}>Follow</button>}
+                    {slug!==cookies.Handle&&<button className={'primary'} onClick={handleFollow}>{endPoint}</button>}
                     {slug===cookies.Handle&&<button className={'primary'} onClick={()=>setShowEdit(true)} >Edit Profile</button>}
                 </div>
                 <ButtonContainer>
