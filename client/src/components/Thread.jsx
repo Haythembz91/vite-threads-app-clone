@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import {Link} from 'react-router-dom'
 import {ImageContainer} from "../pages/Profile.jsx";
-import { Cookies } from "react-cookie";
+import { Cookies, useCookies } from "react-cookie";
+import { useState } from "react";
 
 
 const FeedCard = styled.article`
@@ -27,25 +28,52 @@ const Icons=styled.div`
 `
 const Thread =({user,thread})=>{
 
+    const [cookies,setCookie,removeCookie]=useCookies()
+    const [likes,setLikes]=useState(0)
     const handleLike = async ()=>{
         try{
             const response = await fetch('http://localhost:8000/like',{
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({threadId:thread.id,userId:Cookies.Handle})
+                body:JSON.stringify({threadId:thread.id,userId:cookies.Handle})
             })
             const data = await response.json()
-            console.log(data)
+            setLikes(data[0].count)
         }catch(error){console.error(error)}
     }
+    const time = Math.ceil((new Date()- new Date(thread.time_stamp))/1000)
 
+    const timeStamp = ()=>{
+        switch (true){
+            case time <60: {
+                return time + 's'
+                break
+            }
+            case time <3600: {
+                return Math.ceil(time/60) + 'm'
+                break
+            }
+            case (time/3600)<23:{
+                return Math.ceil(time/3600) + 'h'
+                break
+            }
+            case (time/(3600*24))<7:{
+                return Math.ceil(time/(3600*24)) + 'd'
+                break
+            }
+            default : {
+                return thread.time_stamp.slice(0,10)
+                break
+            }
+        }
+    }
     return (
         <FeedCard>
 
             <TextContainer>
                 <Img><img src={user[0].img} alt={'avatar image'}/></Img>
                 <Link to={`/users/${thread.thread_from}`}><p><strong>{thread.thread_from}</strong></p></Link>
-                <p style={{color: 'rgb(114,114,114)'}}>{Math.ceil((new Date() - new Date(thread.time_stamp)) / (1000 * 60)) >= 60 ? Math.floor((new Date() - new Date(thread.time_stamp)) / (1000 * 60 * 60)) + 'h' : Math.ceil((new Date() - new Date(thread.time_stamp)) / (1000 * 60)) + 'min'}</p>
+                <p style={{color: 'rgb(114,114,114)'}}>{timeStamp()}</p>
             </TextContainer>
             <p>{thread.text}</p>
             <Icons>
@@ -68,7 +96,7 @@ const Thread =({user,thread})=>{
                         d="M24 0l-6 22-8.129-7.239 7.802-8.234-10.458 7.227-7.215-1.754 24-12zm-15 16.668v7.332l3.258-4.431-3.258-2.901z"/>
                 </svg>
             </Icons>
-            <p><span>X replies · </span> <span>X likes</span></p>
+            <p><span>X replies · </span> <span>{likes} likes</span></p>
         </FeedCard>
     )
 }

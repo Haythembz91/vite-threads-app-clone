@@ -69,14 +69,27 @@ const Profile = ({users,threads})=>{
     const [showEdit,setShowEdit]=useState(false)
     const leader = slug
     const follower = cookies.Handle
-    const [endPoint,setEndPoint]=useState('follow')
+    const [isFollowed,setIsFollowed]=useState(true)
+    const [endPoint,setEndPoint]=useState()
+
+    const checkFollow = async ()=>{
+        const response = await fetch('http://localhost:8000/checkfollow',{
+            method:'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({leader,follower})
+        })
+        const data = await response.json()
+        console.log(data)
+        setIsFollowed(data)
+        isFollowed?setEndPoint('unfollow'):setEndPoint('follow')
+    }
+
 
 
     const getUserData = async()=>{
         const response  = await fetch(`http://localhost:8000/users/${slug}`)
         const data = await response.json()
         setUser(data.users[0])
-        setFollowers(data.followers[0].count)
     }
     const getFollowers = async()=>{
         const response  = await fetch(`http://localhost:8000/users/${slug}`)
@@ -92,8 +105,10 @@ const Profile = ({users,threads})=>{
                 body:JSON.stringify({leader,follower})
             })
             if(response.status===200){
-                endPoint==='Follow'? setEndPoint('Unfollow'):setEndPoint('Follow')
+                setIsFollowed(!isFollowed)
+                isFollowed?setEndPoint('unfollow'):setEndPoint('follow')
                 getFollowers()
+
             }
 
         }catch(error){
@@ -105,9 +120,11 @@ const Profile = ({users,threads})=>{
 
     useEffect( ()=>{
         getUserData()
+        checkFollow()
         getFollowers()
+        
     },[])
-
+    
 
     return(
         <div className={'profile-page-container'}>
@@ -127,7 +144,8 @@ const Profile = ({users,threads})=>{
                     </p>
                 </SubInfoContainer>
                 <div style={{textAlign:'center'}}>
-                    {slug!==cookies.Handle&&<button className={'primary'} onClick={handleFollow}>{endPoint}</button>}
+                    {slug!==cookies.Handle&&<button className={'primary'} onClick={handleFollow}>{isFollowed? 'Unfollow':'Follow'}</button>}
+
                     {slug===cookies.Handle&&<button className={'primary'} onClick={()=>setShowEdit(true)} >Edit Profile</button>}
                 </div>
                 <ButtonContainer>

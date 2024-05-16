@@ -115,7 +115,7 @@ app.put('/edit',async(req,res)=>{
 app.put('/follow',async (req,res)=>{
 
     const {leader,follower} = req.body
-    console.log(req.body)
+    console.log('follow',req.body)
     try{
         const follow = await pool.query('INSERT INTO followers(leader,follower)VALUES($1,$2);',[leader,follower])
         res.json(follow.rows)
@@ -128,7 +128,7 @@ app.put('/follow',async (req,res)=>{
 app.put('/unfollow',async (req,res)=>{
 
     const {leader,follower} = req.body
-    console.log(req.body)
+    console.log('unfollow',req.body)
     try{
         const follow = await pool.query('DELETE FROM followers WHERE leader=$1 AND follower = $2;',[leader,follower])
         res.json(follow.rows)
@@ -139,7 +139,7 @@ app.put('/unfollow',async (req,res)=>{
 
 app.post('/like',async(req,res)=>{
     const {threadId,userId}=req.body
-    console.log(req.body)
+    
     try{
         const like = await pool.query('INSERT INTO likes(thread_id,user_id)VALUES($1,$2);',[threadId,userId])
         const likes = await pool.query('SELECT COUNT(user_id) FROM likes WHERE thread_id=$1;',[threadId])
@@ -149,7 +149,22 @@ app.post('/like',async(req,res)=>{
     }
 })
 
+app.post('/checkfollow',async (req,res)=>{
 
+    const {leader,follwer}=req.body
+    console.log(req.body)
+    try{
+        const check = await pool.query('SELECT * FROM followers WHERE leader=$1 AND follower=$2;',[leader,follwer])
+        res.json(check.rowCount)
+        console.log(check.rowCount)
+
+    }catch(error){
+        console.error(error)
+    }
+
+
+
+})
 
 
 

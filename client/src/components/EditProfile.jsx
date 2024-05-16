@@ -70,7 +70,7 @@ const EditProfile = ({setShowEdit,user,getUserData})=>{
                 
                 getUserData()
                 setShowEdit(false)
-                window.location.reload
+            
 
             }
 
