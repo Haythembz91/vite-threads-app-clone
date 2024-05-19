@@ -151,17 +151,17 @@ app.post('/like',async(req,res)=>{
 
 app.post('/checkfollow',async (req,res)=>{
 
-    const {leader,follwer}=req.body
+    const {leader,follower}=req.body
     console.log(req.body)
     try{
-        const check = await pool.query('SELECT * FROM followers WHERE leader=$1 AND follower=$2;',[leader,follwer])
-        res.json(check.rowCount)
-        console.log(check.rowCount)
+        const check = await pool.query('SELECT * FROM followers WHERE leader=$1 AND follower=$2;',[leader,follower])
+        if(check.rowCount===0){
+            res.json(false)
+        }else{res.json(true)}
 
     }catch(error){
         console.error(error)
     }
-
 
 
 })

@@ -70,7 +70,7 @@ const Profile = ({users,threads})=>{
     const leader = slug
     const follower = cookies.Handle
     const [isFollowed,setIsFollowed]=useState(true)
-    const [endPoint,setEndPoint]=useState()
+    const [endPoint,setEndPoint]=useState('')
 
     const checkFollow = async ()=>{
         const response = await fetch('http://localhost:8000/checkfollow',{
@@ -79,11 +79,11 @@ const Profile = ({users,threads})=>{
             body: JSON.stringify({leader,follower})
         })
         const data = await response.json()
-        console.log(data)
         setIsFollowed(data)
         isFollowed?setEndPoint('unfollow'):setEndPoint('follow')
-    }
 
+    }
+    console.log(isFollowed,endPoint)
 
 
     const getUserData = async()=>{
