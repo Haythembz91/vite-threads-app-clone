@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import Feed from './../components/Feed.jsx'
 import {useParams} from "react-router-dom";
 import {useCookies} from "react-cookie";
@@ -70,7 +70,7 @@ const Profile = ({users,threads})=>{
     const leader = slug
     const follower = cookies.Handle
     const [isFollowed,setIsFollowed]=useState(true)
-    const [endPoint,setEndPoint]=useState('')
+    const [endPoint,setEndPoint]=useState()
 
     const checkFollow = async ()=>{
         const response = await fetch('http://localhost:8000/checkfollow',{
@@ -79,11 +79,11 @@ const Profile = ({users,threads})=>{
             body: JSON.stringify({leader,follower})
         })
         const data = await response.json()
-        setIsFollowed(data)
-        isFollowed?setEndPoint('unfollow'):setEndPoint('follow')
+        setIsFollowed(data.isFollowed)
+        setEndPoint(data.endPoint)
 
     }
-    console.log(isFollowed,endPoint)
+
 
 
     const getUserData = async()=>{
@@ -91,11 +91,13 @@ const Profile = ({users,threads})=>{
         const data = await response.json()
         setUser(data.users[0])
     }
+
     const getFollowers = async()=>{
         const response  = await fetch(`http://localhost:8000/users/${slug}`)
         const data = await response.json()
         setFollowers(data.followers[0].count)
     }
+
     const handleFollow = async (e)=>{
         e.preventDefault()
         try{
@@ -124,8 +126,8 @@ const Profile = ({users,threads})=>{
         getFollowers()
         
     },[])
-    
 
+    console.log(isFollowed,endPoint)
     return(
         <div className={'profile-page-container'}>
             <header>

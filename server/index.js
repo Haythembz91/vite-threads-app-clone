@@ -142,6 +142,27 @@ app.post('/like',async(req,res)=>{
     
     try{
         const like = await pool.query('INSERT INTO likes(thread_id,user_id)VALUES($1,$2);',[threadId,userId])
+        res.json('dislike')
+    }catch(error){
+        console.error(error)
+    }
+})
+
+app.post('/dislike',async(req,res)=>{
+    const {threadId,userId}=req.body
+
+    try{
+        const dislike = await pool.query('DELETE FROM likes WHERE thread_id=$1 user_id=$2);',[threadId,userId])
+        res.json('like')
+    }catch(error){
+        console.error(error)
+    }
+})
+
+app.post('/likes',async(req,res)=>{
+    const {threadId}=req.body
+
+    try{
         const likes = await pool.query('SELECT COUNT(user_id) FROM likes WHERE thread_id=$1;',[threadId])
         res.json(likes.rows)
     }catch(error){
@@ -152,12 +173,12 @@ app.post('/like',async(req,res)=>{
 app.post('/checkfollow',async (req,res)=>{
 
     const {leader,follower}=req.body
-    console.log(req.body)
+
     try{
         const check = await pool.query('SELECT * FROM followers WHERE leader=$1 AND follower=$2;',[leader,follower])
         if(check.rowCount===0){
-            res.json(false)
-        }else{res.json(true)}
+            res.json({'isFollowed':false,'endPoint':'follow'})
+        }else{res.json({'isFollowed':true, 'endPoint':'unfollow'})}
 
     }catch(error){
         console.error(error)

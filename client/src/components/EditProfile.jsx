@@ -57,8 +57,8 @@ const EditProfile = ({setShowEdit,user,getUserData})=>{
     const [inst,setInst]=useState(user.inst_url)
     const handle = user.handle
 
-    const handleEdit = async ()=>{
-        
+    const handleEdit = async (e)=>{
+        e.preventDefault()
         try{
             const response = await fetch('http://localhost:8000/edit',{
                 method:'PUT',
@@ -67,18 +67,12 @@ const EditProfile = ({setShowEdit,user,getUserData})=>{
             })
             
             if (response.status===200){
-                
                 getUserData()
                 setShowEdit(false)
-            
-
             }
-
         }catch(error){
             console.error(error)
         }
-
-
     }
     
     return (
@@ -103,7 +97,7 @@ const EditProfile = ({setShowEdit,user,getUserData})=>{
                 <label>Instagram URL</label>
                 <input type={'text'} value={inst} onChange={e=>setInst(e.target.value)}/>
             </form>
-            <button style={{width:'100%'}} className={'primary'} onClick={handleEdit}>Done</button>
+            <button style={{width:'100%'}} className={'primary'} onClick={(e)=>handleEdit(e)}>Done</button>
         </ThreadInputContainer>
     )
 }

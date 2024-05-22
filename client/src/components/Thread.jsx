@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {Link} from 'react-router-dom'
 import {ImageContainer} from "../pages/Profile.jsx";
 import { Cookies, useCookies } from "react-cookie";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
 
 const FeedCard = styled.article`
@@ -30,15 +30,31 @@ const Thread =({user,thread})=>{
 
     const [cookies,setCookie,removeCookie]=useCookies()
     const [likes,setLikes]=useState(0)
-    const handleLike = async ()=>{
+    const [isLiked,setIsLiked]=useState(false)
+    const [endPoint,setEndPoint]=useState('like')
+    const likesCount = async ()=>{
         try{
-            const response = await fetch('http://localhost:8000/like',{
+            const response = await fetch('http://localhost:8000/likes',{
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
                 body:JSON.stringify({threadId:thread.id,userId:cookies.Handle})
             })
             const data = await response.json()
             setLikes(data[0].count)
+        }catch(error){console.error(error)}
+    }
+    const handleLike = async ()=>{
+        try{
+            const response = await fetch(`http://localhost:8000/${endPoint}`,{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({threadId:thread.id,userId:cookies.Handle})
+            })
+            const data = await response.json()
+            if(response.status===200){
+                setEndPoint(data)
+                likesCount()
+            }
         }catch(error){console.error(error)}
     }
     const time = Math.ceil((new Date()- new Date(thread.time_stamp))/1000)
@@ -67,6 +83,10 @@ const Thread =({user,thread})=>{
             }
         }
     }
+
+    useEffect(()=>{
+        likesCount()
+    },[likes])
     return (
         <FeedCard>
 
