@@ -15,11 +15,11 @@ const Popup = styled.div`
     
 `
 
-const PopUp = ({setShowModal,user,getThreads})=>{
+const PopUp = ({setShowModal,user,getThreads,showModel})=>{
     return(
         <Popup>
             <PopUpThread></PopUpThread>
-            <ThreadInput getThreads={getThreads} user={user} setShowModal={setShowModal}></ThreadInput>
+            <ThreadInput showModal={showModel} getThreads={getThreads} user={user} setShowModal={setShowModal}></ThreadInput>
         </Popup>
     )
 }

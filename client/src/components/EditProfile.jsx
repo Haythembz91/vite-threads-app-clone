@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 
 const ThreadInputContainer = styled.div`
@@ -47,7 +47,7 @@ const CloseButton = styled.div`
         }
     }
 `
-const EditProfile = ({setShowEdit,user,getUserData})=>{
+const EditProfile = ({setShowEdit,user,getUserData,showEdit})=>{
 
 
     const [name,setName]=useState(user.username)
@@ -74,6 +74,10 @@ const EditProfile = ({setShowEdit,user,getUserData})=>{
             console.error(error)
         }
     }
+
+    useEffect(()=>{
+        getUserData()
+    },[showEdit])
     
     return (
         <ThreadInputContainer>

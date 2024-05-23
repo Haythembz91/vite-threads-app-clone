@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import {TextContainer,Img} from './Thread.jsx'
-import {useState} from "react";
+import {useEffect, useState} from "react";
 
 
 
@@ -39,7 +39,7 @@ const CloseButton = styled.div`
         }
     }
 `
-const ThreadInput = ({setShowModal,user,getThreads})=>{
+const ThreadInput = ({setShowModal,user,getThreads,showModal})=>{
 
     const poster = user.handle
     const [thread,setThread] = useState('')
@@ -59,6 +59,10 @@ const ThreadInput = ({setShowModal,user,getThreads})=>{
             }
         }catch(error){console.error(error)}
     }
+
+    useEffect(()=>{
+        getThreads()
+    },[showModal])
 
     return (
         <ThreadInputContainer>

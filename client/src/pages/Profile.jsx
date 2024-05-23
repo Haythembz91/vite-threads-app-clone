@@ -59,7 +59,7 @@ const ButtonContainer = styled.div`
 
 
 
-const Profile = ({users,threads})=>{
+const Profile = ({users,threads,getThreads})=>{
 
     const [mode,setMode] = useState('threads')
     const [user,setUser]=useState([])
@@ -119,13 +119,17 @@ const Profile = ({users,threads})=>{
     }
 
 
-
     useEffect( ()=>{
         getUserData()
+    },[showEdit])
+    useEffect(()=>{
         checkFollow()
         getFollowers()
-        
-    },[])
+    },[isFollowed])
+
+    useEffect(()=>{
+        getThreads()
+    },[mode])
 
     console.log(isFollowed,endPoint)
     return(
@@ -163,7 +167,7 @@ const Profile = ({users,threads})=>{
                     </button>
                 </ButtonContainer>
             </header>
-            {showEdit&&<EditProfile getUserData={getUserData} user={user} setShowEdit={setShowEdit}/>}
+            {showEdit&&<EditProfile getUserData={getUserData} user={user} showEdit={showEdit}  setShowEdit={setShowEdit}/>}
             {mode === 'threads' ? <Feed users={users} threads={threads.filter(thread=>thread.thread_from===slug)}></Feed>:<h1>Replies</h1>}
         </div>
     )

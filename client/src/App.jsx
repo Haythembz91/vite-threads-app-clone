@@ -49,10 +49,10 @@ const App = ()=>{
                 <div>
                     <Routes>
                         <Route path={""} element={<Home users={users} threads={threads}/>}></Route>
-                        <Route path={'/users/:slug'} element={<Profile users={users} threads={threads}/>}></Route>
+                        <Route path={'/users/:slug'} element={<Profile getThreads={getThreads} users={users} threads={threads}/>}></Route>
                     </Routes>
                 </div>
-                {showModal && <PopUp getThreads={getThreads} user={user} setShowModal={setShowModal}></PopUp>}
+                {showModal && <PopUp getThreads={getThreads} user={user} showModel={showModal} setShowModal={setShowModal}></PopUp>}
             </div>}
             {!authToken&&<Auth></Auth>}
         </>

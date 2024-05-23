@@ -32,6 +32,7 @@ const Thread =({user,thread})=>{
     const [likes,setLikes]=useState(0)
     const [isLiked,setIsLiked]=useState(false)
     const [endPoint,setEndPoint]=useState('like')
+
     const likesCount = async ()=>{
         try{
             const response = await fetch('http://localhost:8000/likes',{
@@ -40,6 +41,7 @@ const Thread =({user,thread})=>{
                 body:JSON.stringify({threadId:thread.id,userId:cookies.Handle})
             })
             const data = await response.json()
+            console.log(data)
             setLikes(data[0].count)
         }catch(error){console.error(error)}
     }
@@ -51,6 +53,7 @@ const Thread =({user,thread})=>{
                 body:JSON.stringify({threadId:thread.id,userId:cookies.Handle})
             })
             const data = await response.json()
+            console.log(data)
             if(response.status===200){
                 setEndPoint(data)
                 likesCount()

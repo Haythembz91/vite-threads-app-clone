@@ -160,8 +160,7 @@ app.post('/dislike',async(req,res)=>{
 })
 
 app.post('/likes',async(req,res)=>{
-    const {threadId}=req.body
-
+    const {threadId,userId}=req.body
     try{
         const likes = await pool.query('SELECT COUNT(user_id) FROM likes WHERE thread_id=$1;',[threadId])
         res.json(likes.rows)
