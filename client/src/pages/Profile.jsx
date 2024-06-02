@@ -122,6 +122,7 @@ const Profile = ({users,threads,getThreads})=>{
     useEffect( ()=>{
         getUserData()
     },[showEdit])
+    
     useEffect(()=>{
         checkFollow()
         getFollowers()
@@ -131,14 +132,14 @@ const Profile = ({users,threads,getThreads})=>{
         getThreads()
     },[mode])
 
-    console.log(isFollowed,endPoint)
+    
     return(
         <div className={'profile-page-container'}>
             <header>
                 <InfoContainer>
                     <UserInfoContainer>
                         <h1>{user.username}</h1>
-                        <p>{user.handle} <span>threads.net</span></p>
+                        <p>@{user.handle} <span>threads.net</span></p>
                     </UserInfoContainer>
                     <ImageContainer>
                         <img src={user.img} alt={'avatar image'}/>
@@ -168,7 +169,7 @@ const Profile = ({users,threads,getThreads})=>{
                 </ButtonContainer>
             </header>
             {showEdit&&<EditProfile getUserData={getUserData} user={user} showEdit={showEdit}  setShowEdit={setShowEdit}/>}
-            {mode === 'threads' ? <Feed users={users} threads={threads.filter(thread=>thread.thread_from===slug)}></Feed>:<h1>Replies</h1>}
+            {mode === 'threads' ? <Feed users={users} threads={threads?.filter(thread=>thread.thread_from===slug)}></Feed>:<h1>Replies</h1>}
         </div>
     )
 }

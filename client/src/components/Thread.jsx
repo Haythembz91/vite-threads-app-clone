@@ -31,7 +31,7 @@ const Thread =({user,thread})=>{
     const [cookies,setCookie,removeCookie]=useCookies()
     const [likes,setLikes]=useState(0)
     const [isLiked,setIsLiked]=useState(false)
-    const [endPoint,setEndPoint]=useState('like')
+    const [endPoint,setEndPoint]=useState()
 
     const likesCount = async ()=>{
         try{
@@ -42,7 +42,10 @@ const Thread =({user,thread})=>{
             })
             const data = await response.json()
             console.log(data)
-            setLikes(data[0].count)
+            setLikes(data.likes[0].count)
+            setIsLiked(data.isLiked)
+            setEndPoint(data.endPoint)
+            console.log(likes,isLiked,endPoint)
         }catch(error){console.error(error)}
     }
     const handleLike = async ()=>{
@@ -55,7 +58,10 @@ const Thread =({user,thread})=>{
             const data = await response.json()
             console.log(data)
             if(response.status===200){
-                setEndPoint(data)
+                setIsLiked(!isLiked)
+                isLiked?setEndPoint('unlike'):setEndPoint('like')
+
+
                 likesCount()
             }
         }catch(error){console.error(error)}
@@ -90,6 +96,10 @@ const Thread =({user,thread})=>{
     useEffect(()=>{
         likesCount()
     },[likes])
+
+    
+
+
     return (
         <FeedCard>
 
