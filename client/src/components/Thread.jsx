@@ -41,11 +41,11 @@ const Thread =({user,thread})=>{
                 body:JSON.stringify({threadId:thread.id,userId:cookies.Handle})
             })
             const data = await response.json()
-            console.log(data)
+            
             setLikes(data.likes[0].count)
             setIsLiked(data.isLiked)
             setEndPoint(data.endPoint)
-            console.log(likes,isLiked,endPoint)
+            
         }catch(error){console.error(error)}
     }
     const handleLike = async ()=>{
@@ -56,7 +56,6 @@ const Thread =({user,thread})=>{
                 body:JSON.stringify({threadId:thread.id,userId:cookies.Handle})
             })
             const data = await response.json()
-            console.log(data)
             if(response.status===200){
                 setIsLiked(!isLiked)
                 isLiked?setEndPoint('unlike'):setEndPoint('like')

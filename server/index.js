@@ -150,7 +150,7 @@ app.post('/like',async(req,res)=>{
 
 app.post('/unlike',async(req,res)=>{
     const {threadId,userId}=req.body
-
+    
     try{
         const dislike = await pool.query('DELETE FROM likes WHERE thread_id=$1 AND user_id=$2;',[threadId,userId])
         res.json(dislike.rows)
@@ -161,7 +161,6 @@ app.post('/unlike',async(req,res)=>{
 
 app.post('/likes',async(req,res)=>{
     const {threadId,userId}=req.body
-    console.log(req.body)
     try{
         const likes = await pool.query('SELECT COUNT(user_id) FROM likes WHERE thread_id=$1;',[threadId])
         const checkLike = await pool.query('SELECT * FROM likes WHERE user_id=$1 AND thread_id=$2;',[userId,threadId])
