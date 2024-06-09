@@ -37,10 +37,10 @@ app.get('/users',async (req,res)=>{
 
 // get threads
 
-app.get('/threads',async(req,res)=>{
-
+app.post('/threads',async(req,res)=>{
+    const {user}=req.body
     try{
-        const threads = await pool.query('SELECT * FROM threads;')
+        const threads = await pool.query('SELECT threads.* FROM threads JOIN followers ON threads.thread_from=followers.leader WHERE followers.follower=$1 UNION SELECT * from threads WHERE threads.thread_from=$1;',[user])
         res.json(threads.rows)
     }catch(err){console.error(err)}
 })
@@ -112,7 +112,7 @@ app.put('/edit',async(req,res)=>{
     }
 })
 
-app.put('/follow',async (req,res)=>{
+app.post('/follow',async (req,res)=>{
 
     const {leader,follower} = req.body
     console.log('follow',req.body)

@@ -102,7 +102,7 @@ const Profile = ({users,threads,getThreads})=>{
         e.preventDefault()
         try{
             const response = await fetch(`http://localhost:8000/${endPoint}`,{
-                method:'PUT',
+                method:'POST',
                 headers:{'Content-Type':'application/json'},
                 body:JSON.stringify({leader,follower})
             })

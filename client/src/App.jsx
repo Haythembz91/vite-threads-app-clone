@@ -26,7 +26,11 @@ const App = ()=>{
     }
 
     const getThreads = async()=>{
-        const response = await fetch(`http://localhost:8000/threads`)
+        const response = await fetch(`http://localhost:8000/threads`,{
+            method:'POST',
+            headers: {'Content-Type':'application/json'},
+            body:JSON.stringify({user:cookies.Handle})
+        })
         const data = await response.json()
         setThreads(data.sort((a,b)=>new Date(b.time_stamp)-new Date(a.time_stamp)))
 

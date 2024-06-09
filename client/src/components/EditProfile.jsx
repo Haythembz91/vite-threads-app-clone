@@ -79,7 +79,7 @@ const EditProfile = ({setShowEdit,user,getUserData,showEdit})=>{
         getUserData()
     },[showEdit])
     
-    console.log(showEdit)
+
     return (
         <ThreadInputContainer>
             <CloseButton>
