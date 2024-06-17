@@ -101,8 +101,7 @@ app.post('/post',async(req,res)=>{
 
 app.put('/edit',async(req,res)=>{
 
-    const {handle,name,avatar,bio,link,inst}=req.body
-
+    const {handle,name,avatar,bio,link,inst}=req.bo
     try{
         const edit = pool.query('UPDATE profiles SET username=$1, img=$2, bio=$3, link=$4, inst_url=$5 ' +
             'WHERE handle=$6 ;',[name,avatar,bio,link,inst,handle])
@@ -185,8 +184,6 @@ app.post('/checkfollow',async (req,res)=>{
     }catch(error){
         console.error(error)
     }
-
-
 })
 
 
