@@ -1,5 +1,6 @@
 
 import Home from './pages/Home.jsx'
+import threadPage from "./pages/ThreadPage.jsx";
 import Header from './components/Header.jsx'
 import PopUp from './components/PopUp.jsx'
 import {Route,Routes} from "react-router-dom";
@@ -7,6 +8,7 @@ import Profile from './pages/Profile.jsx'
 import {useEffect, useState} from "react";
 import Auth from './components/Auth.jsx'
 import {useCookies} from "react-cookie";
+import ThreadPage from "./pages/ThreadPage.jsx";
 
 
 
@@ -54,6 +56,7 @@ const App = ()=>{
                     <Routes>
                         <Route path={""} element={<Home users={users} threads={threads}/>}></Route>
                         <Route path={'/users/:slug'} element={<Profile getThreads={getThreads} users={users} threads={threads}/>}></Route>
+                        <Route path={'/:user/:thread_id'} element={<ThreadPage/>}></Route>
                     </Routes>
                 </div>
                 {showModal && <PopUp getThreads={getThreads} user={user} showModel={showModal} setShowModal={setShowModal}></PopUp>}

@@ -169,7 +169,8 @@ const Profile = ({users,threads,getThreads})=>{
                 </ButtonContainer>
             </header>
             {showEdit&&<EditProfile getUserData={getUserData} user={user} showEdit={showEdit}  setShowEdit={setShowEdit}/>}
-            {mode === 'threads' ? <Feed users={users} threads={threads?.filter(thread=>thread.thread_from===slug)}></Feed>:<h1>Replies</h1>}
+            {mode === 'threads' ? <Feed users={users} threads={threads?.filter(thread=>thread.thread_from===slug)}></Feed>:
+                <Feed users={users} threads={threads?.filter(thread=>thread.thread_from===slug).filter(thread=>thread.reply_to!==null)}></Feed>}
         </div>
     )
 }
