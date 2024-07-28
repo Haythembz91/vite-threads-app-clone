@@ -1,6 +1,5 @@
 
 import Home from './pages/Home.jsx'
-import threadPage from "./pages/ThreadPage.jsx";
 import Header from './components/Header.jsx'
 import PopUp from './components/PopUp.jsx'
 import {Route,Routes} from "react-router-dom";
@@ -9,6 +8,7 @@ import {useEffect, useState} from "react";
 import Auth from './components/Auth.jsx'
 import {useCookies} from "react-cookie";
 import ThreadPage from "./pages/ThreadPage.jsx";
+import Activity from "./pages/Activity.jsx";
 
 
 
@@ -20,6 +20,7 @@ const App = ()=>{
     const user = users.filter(user=>user.handle===cookies.Handle)[0]
     const [threads,setThreads]=useState([])
     const authToken = cookies.AuthToken
+    const [showLoader,setShowLoader]=useState(true)
 
     const getUsers = async()=>{
         const response  = await fetch(`http://localhost:8000/users/`)
@@ -28,13 +29,19 @@ const App = ()=>{
     }
 
     const getThreads = async()=>{
-        const response = await fetch(`http://localhost:8000/threads`,{
-            method:'POST',
-            headers: {'Content-Type':'application/json'},
-            body:JSON.stringify({user:cookies.Handle})
-        })
-        const data = await response.json()
-        setThreads(data.sort((a,b)=>new Date(b.time_stamp)-new Date(a.time_stamp)))
+        try{
+            const response = await fetch(`http://localhost:8000/threads`,{
+                method:'POST',
+                headers: {'Content-Type':'application/json'},
+                body:JSON.stringify({user:cookies.Handle})
+            })
+            const data = await response.json()
+            setThreads(data.sort((a,b)=>new Date(b.time_stamp)-new Date(a.time_stamp)))
+        }catch(error){
+            console.error(error)
+        }finally{
+            setShowLoader(false)
+        }
 
     }
 
@@ -54,17 +61,17 @@ const App = ()=>{
                 <Header user={user} setShowModal={setShowModal} ></Header>
                 <div>
                     <Routes>
-                        <Route path={""} element={<Home users={users} threads={threads}/>}></Route>
+                        <Route path={""} element={<Home showLoader={showLoader} users={users} getThreads={getThreads} threads={threads}/>}></Route>
                         <Route path={'/users/:slug'} element={<Profile getThreads={getThreads} users={users} threads={threads}/>}></Route>
-                        <Route path={'/:user/:thread_id'} element={<ThreadPage/>}></Route>
+                        <Route path={'/:user/:thread_id'} element={<ThreadPage getThreads={getThreads} showModal={showModal} setShowModal={setShowModal} users={users} threads={threads}/>}></Route>
+                        <Route path={'/activities'} element={<Activity users={users} />}></Route>
                     </Routes>
                 </div>
-                {showModal && <PopUp getThreads={getThreads} user={user} showModel={showModal} setShowModal={setShowModal}></PopUp>}
+                {showModal && <PopUp getThreads={getThreads} user={user} showModal={showModal} setShowModal={setShowModal}></PopUp>}
             </div>}
             {!authToken&&<Auth></Auth>}
         </>
 
     )
 }
-
 export default App

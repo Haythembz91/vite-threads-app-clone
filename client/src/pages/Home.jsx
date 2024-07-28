@@ -1,17 +1,14 @@
 import Feed from './../components/Feed.jsx'
+import Loader from './../components/Loader.jsx'
 
 
 
-
-const Home = ({users,threads})=>{
-
-
-
-
+const Home = ({users,threads,getThreads,showLoader})=>{
 
     return (
         <div className={'profile-page-container'}>
-            <Feed users={users} threads={threads}></Feed>
+            {showLoader&&<Loader></Loader>}
+            <Feed getThreads={getThreads} users={users} threads={threads.filter(thread=>thread.reply_to===null)}></Feed>
         </div>
 
     )

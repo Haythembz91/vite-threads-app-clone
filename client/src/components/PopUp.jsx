@@ -1,5 +1,4 @@
 import styled from 'styled-components'
-import PopUpThread from './PopUpThread.jsx'
 import ThreadInput from './ThreadInput.jsx'
 
 const Popup = styled.div`
@@ -12,14 +11,14 @@ const Popup = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction:column;
     
 `
 
-const PopUp = ({setShowModal,user,getThreads,showModel})=>{
+const PopUp = ({setShowModal,user,getThreads,showModal})=>{
     return(
         <Popup>
-            <PopUpThread></PopUpThread>
-            <ThreadInput showModal={showModel} getThreads={getThreads} user={user} setShowModal={setShowModal}></ThreadInput>
+            <ThreadInput showModal={showModal} getThreads={getThreads} user={user} setShowModal={setShowModal}></ThreadInput>
         </Popup>
     )
 }
