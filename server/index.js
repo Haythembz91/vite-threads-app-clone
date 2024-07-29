@@ -8,7 +8,6 @@ const pool = require('./db')
 const jwt = require('jsonwebtoken')
 const {v4:uuidv4} = require ('uuid')
 const bcrypt = require('bcrypt')
-const {hash} = require("bcrypt");
 
 // get profiles
 
