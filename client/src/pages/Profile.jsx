@@ -110,6 +110,8 @@ const Profile = ({users,threads,getThreads,showModal,setShowModal,isReply,setIsR
                 setIsFollowed(!isFollowed)
                 isFollowed?setEndPoint('unfollow'):setEndPoint('follow')
                 getFollowers()
+                getThreads()
+                
 
             }
 

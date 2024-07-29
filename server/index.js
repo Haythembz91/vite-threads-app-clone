@@ -109,7 +109,7 @@ app.post('/post',async(req,res)=>{
 
 app.put('/edit',async(req,res)=>{
 
-    const {handle,name,avatar,bio,link,inst}=req.bo
+    const {handle,name,avatar,bio,link,inst}=req.body
     try{
         const edit = await pool.query('UPDATE profiles SET username=$1, img=$2, bio=$3, link=$4, inst_url=$5 ' +
             'WHERE handle=$6 ;',[name,avatar,bio,link,inst,handle])

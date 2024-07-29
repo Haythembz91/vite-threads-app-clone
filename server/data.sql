@@ -28,16 +28,32 @@ CREATE TABLE threads (
     time_stamp VARCHAR (255),
     thread_from VARCHAR (255),
     text VARCHAR (255)
+    reply_to VARCHAR(255)
 );
 
 CREATE TABLE likes (
-    thread_Id VARCHAR (255) PRIMARY KEY,
-    user_Id VARCHAR (255)
+    thread_id VARCHAR (255) PRIMARY KEY,
+    user_id VARCHAR (255)
+    
     );
 
 CREATE TABLE replies (
-    thread_Id VARCHAR (255) PRIMARY KEY,
-    replies VARCHAR (255)
+    thread_id VARCHAR (255),
+    reply_from VARCHAR (255),
+    reply_to VARCHAR (255),
+    
+    text VARCHAR (255),
+    timestamp VARCHAR (255),
+    FOREIGN KEY (thread_id) REFERENCES threads(id)
+
     );
 
-
+ CREATE TABLE activities(
+    notification_type VARCHAR (255), 
+     sender_id VARCHAR (255), 
+     recipient_id VARCHAR (255), 
+     timestamp VARCHAR (255),     
+    post_id VARCHAR (255),              
+    read_status VARCHAR (255),
+ );
+ 
