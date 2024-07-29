@@ -8,7 +8,7 @@ import {useParams} from 'react-router-dom'
 
 const FeedCard = styled.article`
     border-bottom: 1px solid rgb(114,114,114);
-    font-family: "Segoe UI",Arial,sans-serif;
+    font-family: "Segoe UI Semibold",Arial,sans-serif;
     padding: 10px 0;
     span{
         color:rgb(114,114,114);
@@ -153,11 +153,11 @@ const Thread =({user,thread,getThreads})=>{
                     </Link>
                     <div>
                         <div style={{display: 'flex'}}>
-                            <Link to={`/users/${thread.thread_from}`}><p><strong>{thread.thread_from}</strong></p>
+                            <Link to={`/users/${thread.thread_from}`}><p style={{fontWeight:'600'}}>{thread.thread_from}</p>
                             </Link>
                             <p style={{color: 'rgb(114,114,114)'}}>{timeStamp()}</p>
                         </div>
-                        <p>{thread.text}</p>
+                        <p style={{fontWeight:'400',fontFamily:'Segoe UI,arial'}}>{thread.text}</p>
                     </div>
                 </TextContainer>
             </Link>

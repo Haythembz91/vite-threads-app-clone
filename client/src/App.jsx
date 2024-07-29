@@ -61,7 +61,7 @@ const App = ()=>{
                 <Header user={user} setShowModal={setShowModal} ></Header>
                 <div>
                     <Routes>
-                        <Route path={""} element={<Home showLoader={showLoader} users={users} getThreads={getThreads} threads={threads}/>}></Route>
+                        <Route path={"/"} element={<Home showLoader={showLoader} users={users} getThreads={getThreads} threads={threads}/>}></Route>
                         <Route path={'/users/:slug'} element={<Profile getThreads={getThreads} users={users} threads={threads}/>}></Route>
                         <Route path={'/:user/:thread_id'} element={<ThreadPage getThreads={getThreads} showModal={showModal} setShowModal={setShowModal} users={users} threads={threads}/>}></Route>
                         <Route path={'/activities'} element={<Activity users={users} />}></Route>

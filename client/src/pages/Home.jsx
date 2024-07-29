@@ -1,10 +1,15 @@
 import Feed from './../components/Feed.jsx'
 import Loader from './../components/Loader.jsx'
+import {useEffect} from "react";
 
 
 
 const Home = ({users,threads,getThreads,showLoader})=>{
 
+
+    useEffect(()=>{
+        getThreads()
+    },[])
     return (
         <div className={'profile-page-container'}>
             {showLoader&&<Loader></Loader>}

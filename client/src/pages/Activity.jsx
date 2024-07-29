@@ -57,7 +57,7 @@ const Activity = ({users})=>{
         <div className={'profile-page-container'}>
             {showLoader&&<Loader></Loader>}
             {activities.sort((a,b)=>a.timestamp<b.timestamp).map(activity =>
-            <div  style={{borderBottom:'1px solid rgb(114,114,114)', padding:'15px'}}>
+            <div key={activity.timestamp}  style={{borderBottom:'1px solid rgb(114,114,114)', padding:'15px'}}>
                 <div style={{display:'flex', flexDirection:'row'}}>
                 <Link to={`/users/${activity.sender_id}`}>
                         <Img><img src={users.filter(user=>user.handle===activity.sender_id)[0].img} alt={'avatar image'}/></Img>
@@ -65,7 +65,7 @@ const Activity = ({users})=>{
                     <p>
                     <Link style={{paddingLeft:'10px'}} to={`/users/${activity.sender_id}`}>{activity.sender_id}</Link>
                     </p>
-                    <p style={{color:'rgb(114,114,114)'}}>{timeStamp((new Date()-new Date(activity.timestamp))/1000)}</p>
+                    <p style={{color:'rgb(114,114,114)'}}>{timeStamp(Math.ceil((new Date()-new Date(activity.timestamp))/1000))}</p>
                 </div>
                 <p>{activity.notification_type==='like'?'Liked your':'Commented on your'} <Link to={`/${activity.recipient_id}/${activity.post_id}`}>post</Link></p>
             </div>)}
