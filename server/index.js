@@ -121,9 +121,10 @@ app.put('/edit',async(req,res)=>{
 app.post('/follow',async (req,res)=>{
 
     const {leader,follower} = req.body
-    console.log('follow',req.body)
+    const time=new Date()
     try{
         const follow = await pool.query('INSERT INTO followers(leader,follower)VALUES($1,$2);',[leader,follower])
+        const activity = await pool.query('INSERT INTO activities(notification_type,sender_id,recipient_id,timestamp,read_status) VALUES($1,$2,$3,$4,$5)',['follow',follower,leader,time,'false'])
         res.json(follow.rows)
     }catch(error){
         console.error(error)
@@ -134,7 +135,6 @@ app.post('/follow',async (req,res)=>{
 app.post('/unfollow',async (req,res)=>{
 
     const {leader,follower} = req.body
-    console.log('unfollow',req.body)
     try{
         const follow = await pool.query('DELETE FROM followers WHERE leader=$1 AND follower = $2;',[leader,follower])
         res.json(follow.rows)
@@ -146,7 +146,6 @@ app.post('/unfollow',async (req,res)=>{
 app.post('/like',async(req,res)=>{
     const {threadId,userId,recipient}=req.body
     const time=new Date()
-    console.log(req.body)
 
     try{
         const like = await pool.query('INSERT INTO likes(thread_id,user_id)VALUES($1,$2);',[threadId,userId])

@@ -29,9 +29,9 @@ const Icons=styled.div`
         padding: 0 6px;
     }
     display: flex;
-    justify-content: space-between;
     div{
         display: flex;
+        padding: 0 10px;
     }   
     
 `
@@ -56,6 +56,7 @@ const Thread =({user,thread,getThreads})=>{
     const [reply,setReply]=useState('')
     const [replies,setReplies]=useState(0)
     const {thread_id}=useParams()
+    const [showReplyInput,setShowReplyInput]=useState(false)
 
     const likesCount = async ()=>{
         try{
@@ -146,7 +147,7 @@ const Thread =({user,thread,getThreads})=>{
 
     return (
         <FeedCard>
-            <Link key={thread.id} to={`/${thread.thread_from}/${thread.id}`}>
+            <Link key={thread.id} to={`/${thread.thread_from}/post/${thread.id}`}>
                 <TextContainer>
                     <Link to={`/users/${thread.thread_from}`}>
                         <Img><img src={user[0].img} alt={'avatar image'}/></Img>
@@ -168,7 +169,7 @@ const Thread =({user,thread,getThreads})=>{
                     <span style={isLiked?{color:'#ff0034'}:{color:'grey'}}>{likes}</span>
                 </div>
                 <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <svg onClick={()=>{setShowReplyInput(true)}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                         <path
                             d="M12 3c5.514 0 10 3.476 10 7.747 0 4.272-4.48 7.748-9.986 7.748-.62 0-1.092-.046-1.759-.097-1 .776-1.774 1.403-3.485 1.962.26-1.383-.113-2.259-.514-3.259-2.383-1.505-4.256-3.411-4.256-6.354 0-4.271 4.486-7.747 10-7.747zm0-2c-6.627 0-12 4.363-12 9.747 0 3.13 1.816 5.916 4.641 7.699.867 2.167-1.084 4.008-3.143 4.502 3.085.266 6.776-.481 9.374-2.497 7.08.54 13.128-3.988 13.128-9.704 0-5.384-5.373-9.747-12-9.747z"/>
                     </svg>
@@ -180,18 +181,13 @@ const Thread =({user,thread,getThreads})=>{
                             d="M5 10v7h10.797l1.594 2h-14.391v-9h-3l4-5 4 5h-3zm14 4v-7h-10.797l-1.594-2h14.391v9h3l-4 5-4-5h3z"/>
                     </svg>
                 </div>
-                <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path
-                            d="M24 0l-6 22-8.129-7.239 7.802-8.234-10.458 7.227-7.215-1.754 24-12zm-15 16.668v7.332l3.258-4.431-3.258-2.901z"/>
-                    </svg>
-                </div>
             </Icons>
-            <ReplyInput>
-                <form onSubmit={handleReply}>
-                    <input value={reply} style={{paddingLeft: '10px'}} type={'text'} placeholder={`Reply to ${user[0].handle}...`} onChange={e=>setReply(e.target.value)}/>
+            {showReplyInput&&<ReplyInput>
+                <form onSubmit={reply!==''&&handleReply}>
+                    <input autoFocus={true} value={reply} style={{paddingLeft: '10px'}} type={'text'}
+                           placeholder={`Reply to ${user[0].handle}...`} onChange={e => setReply(e.target.value)}/>
                 </form>
-            </ReplyInput>
+            </ReplyInput>}
         </FeedCard>
 
     )
