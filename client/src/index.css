@@ -30,7 +30,7 @@ h1,h2,p{
     color: rgb(250,250,250);
 }
 
-button.primary{
+.primary{
     border: rgb(114,114,114) solid 1px;
     background-color: transparent;
     padding: 7px;
@@ -40,7 +40,6 @@ button.primary{
     font-weight: bold;
     width: 48%;
     cursor: pointer;
-
 }
 
 .profile-page-container{
@@ -85,3 +84,16 @@ svg{
   @keyframes l26 {
     100% {transform:rotate(1turn)}
   }
+
+  .postBtn{
+      border: rgb(114,114,114) solid 1px !important;
+      background-color: transparent;
+      border-radius: 7px;
+      padding: 7px;
+      color: rgb(250,250,250);
+      font-weight: bold;
+      cursor: pointer;
+      position: absolute;
+      right: 0;
+      bottom:1px;
+      }

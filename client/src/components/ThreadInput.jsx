@@ -81,7 +81,7 @@ const ThreadInput = ({setShowModal,user,getThreads,showModal})=>{
                 <p><strong>{user.handle}</strong></p>
             </TextContainer>
             <input autoFocus type={'text'} onChange={e=>setThread(e.target.value)} placeholder={'Start a thread...'}/>
-            <button style={{width:'100%'}} className={'primary'} onClick={thread!==''&&handleSubmit}>Post</button>
+            <button style={{width:'100%'}} className={'primary'} onClick={thread!==''?handleSubmit:()=>{}}>Post</button>
         </ThreadInputContainer>
     )
 }

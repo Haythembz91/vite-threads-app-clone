@@ -46,7 +46,6 @@ const ReplyInput = styled.div`
     }
 `
 
-
 const Thread =({user,thread,getThreads})=>{
 
     const [cookies,setCookie,removeCookie]=useCookies()
@@ -183,9 +182,10 @@ const Thread =({user,thread,getThreads})=>{
                 </div>
             </Icons>
             {showReplyInput&&<ReplyInput>
-                <form onSubmit={reply!==''&&handleReply}>
+                <form style={{position:'relative'}} onSubmit={reply!==''?handleReply:(e)=>{e.preventDefault()}}>
                     <input autoFocus={true} value={reply} style={{paddingLeft: '10px'}} type={'text'}
                            placeholder={`Reply to ${user[0].handle}...`} onChange={e => setReply(e.target.value)}/>
+                    <input type={'button'} value={'Post'} className={'postBtn'} onClick={reply!==''?handleReply:(e)=>{e.preventDefault()}} />
                 </form>
             </ReplyInput>}
         </FeedCard>
