@@ -69,7 +69,7 @@ const Activity = ({users})=>{
                 </div>
                 {activity.notification_type==='follow'&&<p>Followed you</p>}
                 {activity.notification_type!=='follow'&&<p>{activity.notification_type === 'like' ? 'Liked your' : 'Commented on your'} <Link
-                    to={`/${activity.recipient_id}/${activity.post_id}`}>post</Link></p>
+                    to={`/${activity.recipient_id}/post/${activity.post_id}`}>post</Link></p>
                 }</div>)}
         </div>
     )

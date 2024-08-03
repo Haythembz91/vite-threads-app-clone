@@ -6,10 +6,6 @@ import {useEffect} from "react";
 
 const Home = ({users,threads,getThreads,showLoader})=>{
 
-
-    useEffect(()=>{
-        getThreads()
-    },[])
     return (
         <div className={'profile-page-container'}>
             {showLoader&&<Loader></Loader>}

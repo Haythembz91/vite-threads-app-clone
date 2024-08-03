@@ -171,8 +171,10 @@ const Profile = ({users,threads,getThreads,showModal,setShowModal,isReply,setIsR
                 </ButtonContainer>
             </header>
             {showEdit&&<EditProfile getUserData={getUserData} user={user} showEdit={showEdit}  setShowEdit={setShowEdit}/>}
-            {mode === 'threads' ? <Feed getThreads={getThreads} users={users} threads={threads?.filter(thread=>thread.thread_from===slug).filter(thread=>thread.reply_to===null)}></Feed>:
-                <Feed getThreads={getThreads} users={users} threads={threads?.filter(thread=>thread.thread_from===slug).filter(thread=>thread.reply_to!==null)}></Feed>}
+            {mode === 'threads' ? threads?.filter(thread=>thread.thread_from===slug).filter(thread=>thread.reply_to===null).length!==0? <Feed getThreads={getThreads} users={users} threads={threads?.filter(thread=>thread.thread_from===slug).filter(thread=>thread.reply_to===null)}></Feed>:
+                    <p style={{color:'rgb(104,104,104)',textAlign:'center'}}>No threads yet.</p>:
+                threads?.filter(thread=>thread.thread_from===slug).filter(thread=>thread.reply_to!==null).length!==0?<Feed getThreads={getThreads} users={users} threads={threads?.filter(thread=>thread.thread_from===slug).filter(thread=>thread.reply_to!==null)}></Feed>:
+                    <p style={{color:'rgb(104,104,104)',textAlign:'center'}}>No replies yet.</p>}
         </div>
     )
 }

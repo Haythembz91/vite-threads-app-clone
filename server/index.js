@@ -47,7 +47,7 @@ app.post('/threads',async(req,res)=>{
 app.post('/replies',async(req,res)=>{
     const {thread_id}=req.body
     try{
-        const replies = await pool.query('SELECT * FROM threads WHERE reply_to=$1',[thread_id])
+        const replies = await pool.query('WITH RECURSIVE ancestors(id,reply_to) AS (SELECT id,reply_to FROM threads  WHERE id=$1 UNION ALL SELECT t.id,t.reply_to FROM threads t INNER JOIN ancestors a ON  t.id=a.reply_to) SELECT t.id,t.thread_from,t.time_stamp,t.text,t.reply_to FROM threads t INNER JOIN ancestors a ON a.id=t.id AND (a.reply_to=t.reply_to OR a.reply_to IS NULL);',[thread_id])
         res.json(replies.rows)
     }catch(err){console.error(err)}
 })
@@ -171,7 +171,7 @@ app.post('/likes',async(req,res)=>{
     const {threadId,userId}=req.body
     try{
         const likes = await pool.query('SELECT COUNT(user_id) FROM likes WHERE thread_id=$1;',[threadId])
-        const replies = await pool.query('SELECT COUNT(reply_from) FROM replies WHERE thread_id=$1;',[threadId])
+        const replies = await pool.query('SELECT COUNT(thread_from) FROM threads WHERE reply_to=$1;',[threadId])
         const checkLike = await pool.query('SELECT * FROM likes WHERE user_id=$1 AND thread_id=$2;',[userId,threadId])
         res.json({replies:replies.rows,likes:likes.rows,isLiked:checkLike.rowCount===1?true:false,endPoint:checkLike.rowCount===1?'unlike':'like'})
         
@@ -199,10 +199,9 @@ app.post('/reply',async (req,res)=>{
     const {threadId,poster,threadFrom,text,time}=req.body
     const id = uuidv4()
     try{
-        const reply = await pool.query('INSERT INTO replies(reply_id,reply_from,reply_to,thread_id,text,timestamp) VALUES($1,$2,$3,$4,$5,$6);',[id,poster,threadFrom,threadId,text,time])
         const post = await pool.query('INSERT INTO threads(id,time_stamp,thread_from,text,reply_to)VALUES($1,$2,$3,$4,$5);',[id,time,poster,text,threadId])
         const activity = await pool.query('INSERT INTO activities(notification_type,sender_id,recipient_id,timestamp,post_id,read_status) VALUES($1,$2,$3,$4,$5,$6)',['comment',poster,threadFrom,time,threadId,'false'])
-        res.json({reply: reply.rows, post: post.rows,activities:activity.rows})
+        res.json({post: post.rows,activities:activity.rows})
     }catch (error){
         console.error(error)
     }

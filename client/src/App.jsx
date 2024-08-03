@@ -71,7 +71,6 @@ const App = ()=>{
             </div>}
             {!authToken&&<Auth></Auth>}
         </>
-
     )
 }
 export default App

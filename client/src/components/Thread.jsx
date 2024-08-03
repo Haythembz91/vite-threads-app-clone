@@ -4,6 +4,8 @@ import {ImageContainer} from "../pages/Profile.jsx";
 import { Cookies, useCookies } from "react-cookie";
 import {useEffect, useState} from "react";
 import {useParams} from 'react-router-dom'
+import ReplyLoader from "./ReplyLoader.jsx";
+
 
 
 const FeedCard = styled.article`
@@ -16,24 +18,32 @@ const FeedCard = styled.article`
 `
 export const TextContainer = styled.div`
     display: flex;
+    position: relative;
 `
 export const Img = styled(ImageContainer)`
     width: 40px;
     height: 40px;
 `
 const Icons=styled.div`
-    width: 40%;
-    padding: 10px;
-    svg{
-        width: 20px;
-        padding: 0 6px;
-    }
+  width: 40%;
+
+  svg {
+    width: 20px;
+    padding: 0 6px;
+  }
+
+  display: flex;
+
+  div {
     display: flex;
-    div{
-        display: flex;
-        padding: 0 10px;
-    }   
-    
+    padding: 5px 10px;
+    border-radius: 10px;
+
+    &:hover {
+      background-color: #151515;
+    }
+  }
+
 `
 const ReplyInput = styled.div`
     input{
@@ -56,6 +66,8 @@ const Thread =({user,thread,getThreads})=>{
     const [replies,setReplies]=useState(0)
     const {thread_id}=useParams()
     const [showReplyInput,setShowReplyInput]=useState(false)
+    const [showPosting,setShowPosting]=useState(false)
+    const [showPosted,setShowPosted]=useState(false)
 
     const likesCount = async ()=>{
         try{
@@ -89,7 +101,7 @@ const Thread =({user,thread,getThreads})=>{
 
     const handleReply = async (e)=> {
         e.preventDefault();
-
+        setShowPosting(true)
         try {
             const response = await fetch('http://localhost:8000/reply',{
                 method:'POST',
@@ -100,11 +112,14 @@ const Thread =({user,thread,getThreads})=>{
                 setReply('')
                 likesCount()
                 getThreads()
-
             }
         }
         catch (error){
             console.error(error)
+        }finally {
+            setShowPosting(false)
+            setShowPosted(true)
+            setTimeout(()=>setShowPosted(false),1500)
         }
 
 
@@ -151,12 +166,13 @@ const Thread =({user,thread,getThreads})=>{
                     <Link to={`/users/${thread.thread_from}`}>
                         <Img><img src={user[0].img} alt={'avatar image'}/></Img>
                     </Link>
+                    <svg style={{position:'absolute',right:'0',fill:'grey'}} width={'24px'} clipRule="evenodd" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m16.5 11.995c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25zm-6.75 0c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25zm-6.75 0c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25z"/></svg>
                     <div>
                         <div style={{display: 'flex'}}>
                             <Link to={`/users/${thread.thread_from}`}><p style={{fontWeight:'600'}}>{thread.thread_from}</p>
                             </Link>
                             <p style={{color: 'rgb(114,114,114)'}}>{timeStamp()}</p>
-                        </div>
+                            </div>
                         <p style={{fontWeight:'400',fontFamily:'Segoe UI,arial'}}>{thread.text}</p>
                     </div>
                 </TextContainer>
@@ -185,7 +201,9 @@ const Thread =({user,thread,getThreads})=>{
                 <form style={{position:'relative'}} onSubmit={reply!==''?handleReply:(e)=>{e.preventDefault()}}>
                     <input autoFocus={true} value={reply} style={{paddingLeft: '10px'}} type={'text'}
                            placeholder={`Reply to ${user[0].handle}...`} onChange={e => setReply(e.target.value)}/>
-                    <input type={'button'} value={'Post'} className={'postBtn'} onClick={reply!==''?handleReply:(e)=>{e.preventDefault()}} />
+                    <input type={'submit'} value={'Post'} className={'postBtn'} onSubmit={reply!==''?handleReply:(e)=>{e.preventDefault()}} />
+                    {showPosting?<ReplyLoader showPosted={showPosted} showPosting={showPosting}></ReplyLoader>:
+                    showPosted&&<ReplyLoader showPosted={showPosted} showPosting={showPosting}></ReplyLoader>}
                 </form>
             </ReplyInput>}
         </FeedCard>
