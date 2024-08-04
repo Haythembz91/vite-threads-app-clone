@@ -33,7 +33,7 @@ const CloseButton = styled.div`
         fill: #4b4c4f;
         width: 30px;
         padding: 10px;
-        border-radius: 10px;
+        border-radius: 15px;
         &:hover{
             background-color: rgb(40,40,40);
         }

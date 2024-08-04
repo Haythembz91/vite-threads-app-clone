@@ -217,7 +217,19 @@ app.post('/activities',async (req,res)=>{
     }
 })
 
+app.delete('/delete',async(req,res)=>{
+    const {thread_id}=req.body
+    try{
+        const deletePost = await pool.query('DELETE FROM threads WHERE id=$1;',[thread_id])
+        const deleteLike = await pool.query('DELETE FROM likes WHERE thread_id=$1;',[thread_id])
+        res.json(deletePost.rows)
+    }catch(error){
+        console.error(error)
+    }
 
+
+
+})
 
 
 

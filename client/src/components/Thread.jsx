@@ -12,13 +12,20 @@ const FeedCard = styled.article`
     border-bottom: 1px solid rgb(114,114,114);
     font-family: "Segoe UI Semibold",Arial,sans-serif;
     padding: 10px 0;
+    position: relative;
     span{
         color:rgb(114,114,114);
     }
 `
 export const TextContainer = styled.div`
     display: flex;
-    position: relative;
+    svg{
+      padding: 5px;
+      border-radius: 50%;
+      &:hover {
+        background-color: #151515;
+      }
+    }
 `
 export const Img = styled(ImageContainer)`
     width: 40px;
@@ -55,6 +62,42 @@ const ReplyInput = styled.div`
         }
     }
 `
+const MoreModal = styled.div`
+        cursor: pointer;
+        .menuModal{
+          position: absolute;
+          right: 0;
+          top: 30px;
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+          span{
+            color:rgb(229, 224, 224);
+            padding: 7px;
+            &:hover{
+              background-color: #151515 ;
+            }
+          }
+          border: solid 1px rgb(114,114,114) ;
+          border-radius: 15px;
+        }
+        
+        
+        .svgBtn{
+          position: absolute;
+          right: 0;
+          top: 0;
+          display: flex;
+          justify-content: flex-end;
+          border-radius: 50%;
+          padding: 7px;
+          &:hover {
+            background-color: #151515;
+          }
+        }
+`
+
+
 
 const Thread =({user,thread,getThreads})=>{
 
@@ -68,7 +111,7 @@ const Thread =({user,thread,getThreads})=>{
     const [showReplyInput,setShowReplyInput]=useState(false)
     const [showPosting,setShowPosting]=useState(false)
     const [showPosted,setShowPosted]=useState(false)
-
+    const [showMenu,setShowMenu]=useState(false)
     const likesCount = async ()=>{
         try{
             const response = await fetch('http://localhost:8000/likes',{
@@ -121,7 +164,28 @@ const Thread =({user,thread,getThreads})=>{
             setShowPosted(true)
             setTimeout(()=>setShowPosted(false),1500)
         }
+    }
 
+    const handleEdit=()=>{
+
+    }
+
+    const handleSave=()=>{
+
+    }
+    const handleDelete=async ()=>{
+        try{
+            const response = await fetch('http://localhost:8000/delete',{
+                method:'DELETE',
+                headers:{'Content-type':'application/json'},
+                body:JSON.stringify({thread_id:thread.id})
+            })
+            if(response.status===200){
+                getThreads()
+            }
+        }catch(error){
+            console.error(error)
+        }
 
     }
 
@@ -166,7 +230,6 @@ const Thread =({user,thread,getThreads})=>{
                     <Link to={`/users/${thread.thread_from}`}>
                         <Img><img src={user[0].img} alt={'avatar image'}/></Img>
                     </Link>
-                    <svg style={{position:'absolute',right:'0',fill:'grey'}} width={'24px'} clipRule="evenodd" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m16.5 11.995c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25zm-6.75 0c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25zm-6.75 0c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25z"/></svg>
                     <div>
                         <div style={{display: 'flex'}}>
                             <Link to={`/users/${thread.thread_from}`}><p style={{fontWeight:'600'}}>{thread.thread_from}</p>
@@ -177,6 +240,18 @@ const Thread =({user,thread,getThreads})=>{
                     </div>
                 </TextContainer>
             </Link>
+            <MoreModal>
+                <div className={'svgBtn'} onClick={()=>setShowMenu(!showMenu)} >
+                    <svg style={{fill:'rgb(114,114,114)'}}  width={'24px'} clipRule="evenodd" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m16.5 11.995c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25zm-6.75 0c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25zm-6.75 0c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25z"/></svg>
+                </div>
+                {showMenu&&<div className={'menuModal'}>
+                    {cookies.Handle===thread.thread_from&&<>
+                        <span onClick={handleEdit}>Edit post</span>
+                        <span onClick={handleDelete}>Delete post</span>
+                    </>}
+                    <span onClick={handleSave}>Save post</span>
+                </div>}
+            </MoreModal>
             <Icons>
                 <div>
                     <svg style={isLiked ? {fill: '#ff0034'} : {fill: 'transparent',stroke:'grey'}} onClick={handleLike} clipRule="evenodd" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12 5.72c-2.624-4.517-10-3.198-10 2.461 0 3.725 4.345 7.727 9.303 12.54.194.189.446.283.697.283s.503-.094.697-.283c4.977-4.831 9.303-8.814 9.303-12.54 0-5.678-7.396-6.944-10-2.461z" fillRule="nonzero"/>
