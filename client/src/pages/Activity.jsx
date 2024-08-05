@@ -67,10 +67,13 @@ const Activity = ({users})=>{
                     </p>
                     <p style={{color:'rgb(114,114,114)'}}>{timeStamp(Math.ceil((new Date()-new Date(activity.timestamp))/1000))}</p>
                 </div>
-                {activity.notification_type==='follow'&&<p>Followed you</p>}
-                {activity.notification_type!=='follow'&&<p>{activity.notification_type === 'like' ? 'Liked your' : 'Commented on your'} <Link
-                    to={`/${activity.recipient_id}/post/${activity.post_id}`}>post</Link></p>
-                }</div>)}
+                {activity.notification_type==='save'?<p>You saved {activity.sender_id}'s <Link
+                    to={`/${activity.recipient_id}/post/${activity.post_id}`}>post</Link></p>:activity.notification_type==='follow'?<p>Followed you</p>:
+                        activity.notification_type!=='follow'?<p>{activity.notification_type === 'like' ? 'Liked your' : 'Commented on your'} <Link
+                                to={`/${activity.recipient_id}/post/${activity.post_id}`}>post</Link></p>:''
+                }
+
+            </div>)}
         </div>
     )
 }

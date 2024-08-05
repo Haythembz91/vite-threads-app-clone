@@ -124,7 +124,8 @@ const Thread =({user,thread,getThreads})=>{
             setLikes(data.likes[0].count)
             setIsLiked(data.isLiked)
             setEndPoint(data.endPoint)
-        }catch(error){console.error(error)}
+        }catch(error)
+        {console.error(error)}
     }
     const handleLike = async ()=>{
         try{
@@ -133,7 +134,6 @@ const Thread =({user,thread,getThreads})=>{
                 headers:{'Content-Type':'application/json'},
                 body:JSON.stringify({threadId:thread.id,userId:cookies.Handle,recipient:thread.thread_from})
             })
-            const data = await response.json()
             if(response.status===200){
                 setIsLiked(!isLiked)
                 isLiked?setEndPoint('unlike'):setEndPoint('like')
@@ -170,10 +170,22 @@ const Thread =({user,thread,getThreads})=>{
 
     }
 
-    const handleSave=()=>{
+    const handleSave=async ()=>{
+        setShowMenu(false)
+        try{
+            const response = await fetch('http://localhost:8000/save',{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({threadId:thread.id,poster:cookies.Handle,threadFrom:thread.thread_from,time:new Date()})
+            })
+        }catch(e){
+            console.error(e)
+        }
+
 
     }
-    const handleDelete=async ()=>{
+    const handleDelete=async (e)=>{
+        e.preventDefault();
         try{
             const response = await fetch('http://localhost:8000/delete',{
                 method:'DELETE',
@@ -219,7 +231,7 @@ const Thread =({user,thread,getThreads})=>{
     useEffect(()=>{
         likesCount()
         getThreads()
-    },[likes,replies,thread_id])
+    },[likes,replies,thread_id,showMenu])
 
 
 

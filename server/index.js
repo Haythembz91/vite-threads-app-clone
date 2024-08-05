@@ -226,12 +226,19 @@ app.delete('/delete',async(req,res)=>{
     }catch(error){
         console.error(error)
     }
-
-
-
 })
 
+app.post('/save',async(req,res)=>{
 
+    const {threadId,poster,threadFrom,time}=req.body
+
+    try{
+        const save = await pool.query('INSERT INTO activities(notification_type,sender_id,recipient_id,timestamp,post_id,read_status)VALUES($1,$2,$3,$4,$5,$6);',['save',threadFrom,poster,time,threadId,false])
+        res.json(save.rows)
+    }catch(error){
+        console.error(error)
+    }
+})
 
 
 
