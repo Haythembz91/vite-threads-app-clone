@@ -18,7 +18,7 @@ const ThreadPage = ({users,threads,getThreads})=> {
             const response = await fetch('http://localhost:8000/replies',{
                 method:'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({thread_id})
+                body: JSON.stringify({thread_id,user})
             })
             const data = await response.json()
             setReplies(data.sort((a,b)=>a.time_stamp>b.time_stamp))

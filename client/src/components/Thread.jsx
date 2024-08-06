@@ -112,18 +112,25 @@ const Thread =({user,thread,getThreads})=>{
     const [showPosting,setShowPosting]=useState(false)
     const [showPosted,setShowPosted]=useState(false)
     const [showMenu,setShowMenu]=useState(false)
+    const [isSaved,setIsSaved]=useState(false)
+    const [showSaving,setShowSaving]=useState(false)
+    const [showDeleting,setShowDeleting]=useState(false)
+    const [showSaved,setShowSaved]=useState(false)
+    const [showDeleted,setShowDeleted]=useState(false)
+
     const likesCount = async ()=>{
         try{
             const response = await fetch('http://localhost:8000/likes',{
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({threadId:thread.id,userId:cookies.Handle})
+                body:JSON.stringify({threadId:thread.id,userId:cookies.Handle,poster:thread.thread_from})
             })
             const data = await response.json()
             setReplies(data.replies[0].count)
             setLikes(data.likes[0].count)
             setIsLiked(data.isLiked)
             setEndPoint(data.endPoint)
+            setIsSaved(data.isSaved)
         }catch(error)
         {console.error(error)}
     }
@@ -132,7 +139,7 @@ const Thread =({user,thread,getThreads})=>{
             const response = await fetch(`http://localhost:8000/${endPoint}`,{
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({threadId:thread.id,userId:cookies.Handle,recipient:thread.thread_from})
+                body:JSON.stringify({threadId:thread.id,userId:cookies.Handle,recipient:thread.thread_from,filter:'threads'})
             })
             if(response.status===200){
                 setIsLiked(!isLiked)
@@ -143,13 +150,13 @@ const Thread =({user,thread,getThreads})=>{
     }
 
     const handleReply = async (e)=> {
-        e.preventDefault();
+        e.preventDefault()
         setShowPosting(true)
         try {
             const response = await fetch('http://localhost:8000/reply',{
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({threadId:thread.id,poster:cookies.Handle,threadFrom:thread.thread_from,text:reply,time:new Date()})
+                body:JSON.stringify({threadId:thread.id,poster:cookies.Handle,threadFrom:thread.thread_from,text:reply,time:new Date(),filter:'threads'})
             })
             if (response.status===200){
                 setReply('')
@@ -170,13 +177,14 @@ const Thread =({user,thread,getThreads})=>{
 
     }
 
-    const handleSave=async ()=>{
+    const handleSave = async ()=>{
         setShowMenu(false)
+
         try{
-            const response = await fetch('http://localhost:8000/save',{
+            const response = await fetch(`http://localhost:8000/${isSaved?'unsave':'save'}`,{
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({threadId:thread.id,poster:cookies.Handle,threadFrom:thread.thread_from,time:new Date()})
+                body:JSON.stringify({threadId:thread.id,poster:cookies.Handle,threadFrom:thread.thread_from,time:new Date(),filter:'save'})
             })
         }catch(e){
             console.error(e)
@@ -186,6 +194,7 @@ const Thread =({user,thread,getThreads})=>{
     }
     const handleDelete=async (e)=>{
         e.preventDefault();
+        setShowDeleting(true)
         try{
             const response = await fetch('http://localhost:8000/delete',{
                 method:'DELETE',
@@ -197,6 +206,10 @@ const Thread =({user,thread,getThreads})=>{
             }
         }catch(error){
             console.error(error)
+        }finally {
+            setShowDeleting(false)
+            setShowDeleted(true)
+            setTimeout(()=>setShowDeleted(false),1500)
         }
 
     }
@@ -234,7 +247,6 @@ const Thread =({user,thread,getThreads})=>{
     },[likes,replies,thread_id,showMenu])
 
 
-
     return (
         <FeedCard>
             <Link key={thread.id} to={`/${thread.thread_from}/post/${thread.id}`}>
@@ -257,11 +269,11 @@ const Thread =({user,thread,getThreads})=>{
                     <svg style={{fill:'rgb(114,114,114)'}}  width={'24px'} clipRule="evenodd" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m16.5 11.995c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25zm-6.75 0c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25zm-6.75 0c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25z"/></svg>
                 </div>
                 {showMenu&&<div className={'menuModal'}>
-                    {cookies.Handle===thread.thread_from&&<>
+                    {cookies.Handle===thread.thread_from && <>
                         <span onClick={handleEdit}>Edit post</span>
                         <span onClick={handleDelete}>Delete post</span>
                     </>}
-                    <span onClick={handleSave}>Save post</span>
+                    {cookies.Handle!==thread.thread_from && <span onClick={handleSave}>{isSaved ? 'Unsave post' : 'Save post'}</span>}
                 </div>}
             </MoreModal>
             <Icons>
@@ -289,9 +301,9 @@ const Thread =({user,thread,getThreads})=>{
                     <input autoFocus={true} value={reply} style={{paddingLeft: '10px'}} type={'text'}
                            placeholder={`Reply to ${user[0].handle}...`} onChange={e => setReply(e.target.value)}/>
                     <input type={'submit'} value={'Post'} className={'postBtn'} onSubmit={reply!==''?handleReply:(e)=>{e.preventDefault()}} />
-                    {showPosting?<ReplyLoader showPosted={showPosted} showPosting={showPosting}></ReplyLoader>:
-                    showPosted&&<ReplyLoader showPosted={showPosted} showPosting={showPosting}></ReplyLoader>}
-                </form>
+                    {showDeleting&&<ReplyLoader showDeleting={showDeleting} showDeleted={showDeleted} showSaving={showSaving}
+                                  showSaved={showSaved} showPosted={showPosted} showPosting={showPosting}></ReplyLoader>
+                    }</form>
             </ReplyInput>}
         </FeedCard>
 

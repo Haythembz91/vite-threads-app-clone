@@ -45,9 +45,9 @@ app.post('/threads',async(req,res)=>{
 // get replies 
 
 app.post('/replies',async(req,res)=>{
-    const {thread_id}=req.body
+    const {thread_id,user}=req.body
     try{
-        const replies = await pool.query('WITH RECURSIVE ancestors(id,reply_to) AS (SELECT id,reply_to FROM threads  WHERE id=$1 UNION ALL SELECT t.id,t.reply_to FROM threads t INNER JOIN ancestors a ON  t.id=a.reply_to) SELECT t.id,t.thread_from,t.time_stamp,t.text,t.reply_to FROM threads t INNER JOIN ancestors a ON a.id=t.id AND (a.reply_to=t.reply_to OR a.reply_to IS NULL);',[thread_id])
+        const replies = await pool.query('WITH RECURSIVE ancestors(id,reply_to) AS (SELECT id,reply_to FROM threads  WHERE id=$1 AND thread_from=$2 UNION ALL SELECT t.id,t.reply_to FROM threads t INNER JOIN ancestors a ON  t.id=a.reply_to) SELECT t.id,t.thread_from,t.time_stamp,t.text,t.reply_to FROM threads t INNER JOIN ancestors a ON a.id=t.id AND (a.reply_to=t.reply_to OR a.reply_to IS NULL);',[thread_id,user])
         res.json(replies.rows)
     }catch(err){console.error(err)}
 })
@@ -120,11 +120,11 @@ app.put('/edit',async(req,res)=>{
 
 app.post('/follow',async (req,res)=>{
 
-    const {leader,follower} = req.body
+    const {leader,follower,filter} = req.body
     const time=new Date()
     try{
         const follow = await pool.query('INSERT INTO followers(leader,follower)VALUES($1,$2);',[leader,follower])
-        const activity = await pool.query('INSERT INTO activities(notification_type,sender_id,recipient_id,timestamp,read_status) VALUES($1,$2,$3,$4,$5)',['follow',follower,leader,time,'false'])
+        const activity = await pool.query('INSERT INTO activities(notification_type,sender_id,recipient_id,timestamp,read_status,filter) VALUES($1,$2,$3,$4,$5,$6)',['follow',follower,leader,time,'false',filter])
         res.json(follow.rows)
     }catch(error){
         console.error(error)
@@ -144,12 +144,12 @@ app.post('/unfollow',async (req,res)=>{
 })
 
 app.post('/like',async(req,res)=>{
-    const {threadId,userId,recipient}=req.body
+    const {threadId,userId,recipient,filter}=req.body
     const time=new Date()
 
     try{
         const like = await pool.query('INSERT INTO likes(thread_id,user_id)VALUES($1,$2);',[threadId,userId])
-        const activity = await pool.query('INSERT INTO activities(notification_type,sender_id,recipient_id,timestamp,post_id,read_status) VALUES($1,$2,$3,$4,$5,$6)',['like',userId,recipient,time,threadId,'false'])
+        const activity = await pool.query('INSERT INTO activities(notification_type,sender_id,recipient_id,timestamp,post_id,read_status,filter) VALUES($1,$2,$3,$4,$5,$6,$7)',['like',userId,recipient,time,threadId,'false',filter])
         res.json({like:like.rows,activity:activity.rows})
     }catch(error){
         console.error(error)
@@ -168,12 +168,13 @@ app.post('/unlike',async(req,res)=>{
 })
 
 app.post('/likes',async(req,res)=>{
-    const {threadId,userId}=req.body
+    const {threadId,userId,poster}=req.body
     try{
         const likes = await pool.query('SELECT COUNT(user_id) FROM likes WHERE thread_id=$1;',[threadId])
         const replies = await pool.query('SELECT COUNT(thread_from) FROM threads WHERE reply_to=$1;',[threadId])
         const checkLike = await pool.query('SELECT * FROM likes WHERE user_id=$1 AND thread_id=$2;',[userId,threadId])
-        res.json({replies:replies.rows,likes:likes.rows,isLiked:checkLike.rowCount===1?true:false,endPoint:checkLike.rowCount===1?'unlike':'like'})
+        const checkSave = await pool.query('SELECT * FROM activities WHERE notification_type=$1 AND sender_id=$2 AND recipient_id=$3 AND post_id=$4',['save',poster,userId,threadId] )
+        res.json({isSaved:checkSave.rowCount===1?true:false,replies:replies.rows,likes:likes.rows,isLiked:checkLike.rowCount===1?true:false,endPoint:checkLike.rowCount===1?'unlike':'like'})
         
 
     }catch(error){
@@ -196,11 +197,12 @@ app.post('/checkfollow',async (req,res)=>{
     }
 })
 app.post('/reply',async (req,res)=>{
-    const {threadId,poster,threadFrom,text,time}=req.body
+    const {threadId,poster,threadFrom,text,time,filter}=req.body
+    console.log(req.body)
     const id = uuidv4()
     try{
-        const post = await pool.query('INSERT INTO threads(id,time_stamp,thread_from,text,reply_to)VALUES($1,$2,$3,$4,$5);',[id,time,poster,text,threadId])
-        const activity = await pool.query('INSERT INTO activities(notification_type,sender_id,recipient_id,timestamp,post_id,read_status) VALUES($1,$2,$3,$4,$5,$6)',['comment',poster,threadFrom,time,threadId,'false'])
+        const post = await pool.query('INSERT INTO threads(id,time_stamp,thread_from,text,reply_to)VALUES($1,$2,$3,$4,$5);',[id,time,poster,text,threadId]);
+        const activity = await pool.query('INSERT INTO activities(notification_type,sender_id,recipient_id,timestamp,post_id,read_status,filter)VALUES($1,$2,$3,$4,$5,$6;$7);',['comment',poster,threadFrom,time,threadId,'false',filter]);
         res.json({post: post.rows,activities:activity.rows})
     }catch (error){
         console.error(error)
@@ -230,11 +232,23 @@ app.delete('/delete',async(req,res)=>{
 
 app.post('/save',async(req,res)=>{
 
-    const {threadId,poster,threadFrom,time}=req.body
+    const {threadId,poster,threadFrom,time,filter}=req.body
 
     try{
-        const save = await pool.query('INSERT INTO activities(notification_type,sender_id,recipient_id,timestamp,post_id,read_status)VALUES($1,$2,$3,$4,$5,$6);',['save',threadFrom,poster,time,threadId,false])
+        const save = await pool.query('INSERT INTO activities(notification_type,sender_id,recipient_id,timestamp,post_id,read_status,filter)VALUES($1,$2,$3,$4,$5,$6,$7);',['save',threadFrom,poster,time,threadId,false,filter])
         res.json(save.rows)
+    }catch(error){
+        console.error(error)
+    }
+})
+
+app.post('/unsave',async(req,res)=>{
+
+    const {threadId,poster,threadFrom,filter}=req.body
+
+    try{
+        const unsave = await pool.query('DELETE FROM activities WHERE notification_type=$1 AND sender_id=$2 AND recipient_id=$3 AND post_id=$4 AND filter=$5;',['save',threadFrom,poster,threadId,filter])
+        res.json(unsave.rows)
     }catch(error){
         console.error(error)
     }

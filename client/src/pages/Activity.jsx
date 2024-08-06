@@ -3,13 +3,27 @@ import {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import Loader from './../components/Loader'
 import { Img } from "../components/Thread";
+import styled from "styled-components";
 
+const ButtonContainer = styled.div`
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+      button{
+        border: none;
+        background-color: transparent;
+        padding: 7px;
+        color:rgb(114,114,114);
+        border-bottom: 1px solid rgb(114,114,114);
+        font-weight: bold;
+        cursor: pointer;
+      }
+    `
 const Activity = ({users})=>{
 
     const [cookies,setCookie,removeCookie]=useCookies()
     const [activities,setActivities]=useState([])
     const [showLoader,setShowLoader]=useState(true)
-    
+    const [mode,setMode]=useState('threads')
 
     const getNotifications =async ()=>{
         try{
@@ -56,7 +70,24 @@ const Activity = ({users})=>{
     return (
         <div className={'profile-page-container'}>
             {showLoader&&<Loader></Loader>}
-            {activities.sort((a,b)=>a.timestamp<b.timestamp).map(activity =>
+            <ButtonContainer>
+                <button style={mode === 'threads' ? {
+                    color: 'rgb(250,250,250)',
+                    borderBottom: '1.5px solid rgb(250,250,250)'
+                } : {color: 'rgb(114, 114, 114)'}} onClick={() => setMode('threads')}>Threads
+                </button>
+                <button style={mode === 'follow' ? {
+                    color: 'rgb(250,250,250)',
+                    borderBottom: '1.5px solid rgb(250,250,250)'
+                } : {color: 'rgb(114, 114, 114)'}} onClick={() => setMode('follow')}>Follows
+                </button>
+                <button style={mode === 'save' ? {
+                    color: 'rgb(250,250,250)',
+                    borderBottom: '1.5px solid rgb(250,250,250)'
+                } : {color: 'rgb(114, 114, 114)'}} onClick={() => setMode('save')}>Saved
+                </button>
+            </ButtonContainer>
+            {activities.filter(activity=>activity.filter===mode).sort((a,b)=>a.timestamp<b.timestamp).map(activity =>
             <div key={activity.timestamp}  style={{borderBottom:'1px solid rgb(114,114,114)', padding:'15px'}}>
                 <div style={{display:'flex', flexDirection:'row'}}>
                 <Link to={`/users/${activity.sender_id}`}>
@@ -68,7 +99,7 @@ const Activity = ({users})=>{
                     <p style={{color:'rgb(114,114,114)'}}>{timeStamp(Math.ceil((new Date()-new Date(activity.timestamp))/1000))}</p>
                 </div>
                 {activity.notification_type==='save'?<p>You saved {activity.sender_id}'s <Link
-                    to={`/${activity.recipient_id}/post/${activity.post_id}`}>post</Link></p>:activity.notification_type==='follow'?<p>Followed you</p>:
+                    to={`/${activity.sender_id}/post/${activity.post_id}`}>post</Link></p>:activity.notification_type==='follow'?<p>Followed you</p>:
                         activity.notification_type!=='follow'?<p>{activity.notification_type === 'like' ? 'Liked your' : 'Commented on your'} <Link
                                 to={`/${activity.recipient_id}/post/${activity.post_id}`}>post</Link></p>:''
                 }

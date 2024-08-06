@@ -41,7 +41,10 @@ const SubInfoContainer = styled.div`
     color: rgb(114,114,114);
   }
 `
-const ButtonContainer = styled.div`
+export const ButtonContainer = styled.div`
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  
     button{
         border: none;
         background-color: transparent;
@@ -49,11 +52,7 @@ const ButtonContainer = styled.div`
         color:rgb(114,114,114);
         border-bottom: 1px solid rgb(114,114,114);
         font-weight: bold;
-        width: 50%;
         cursor: pointer;
-        &:hover{
-           color: rgb(90,90,90);
-        }
     }
 `
 
@@ -104,7 +103,7 @@ const Profile = ({users,threads,getThreads,showModal,setShowModal,isReply,setIsR
             const response = await fetch(`http://localhost:8000/${endPoint}`,{
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({leader,follower})
+                body:JSON.stringify({leader,follower,filter:'follow'})
             })
             if(response.status===200){
                 setIsFollowed(!isFollowed)
