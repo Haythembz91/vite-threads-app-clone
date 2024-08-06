@@ -156,7 +156,7 @@ const Thread =({user,thread,getThreads})=>{
             const response = await fetch('http://localhost:8000/reply',{
                 method:'POST',
                 headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({threadId:thread.id,poster:cookies.Handle,threadFrom:thread.thread_from,text:reply,time:new Date(),filter:'threads'})
+                body:JSON.stringify({threadId:thread.id,poster:cookies.Handle,threadFrom:thread.thread_from,text:reply,time:new Date()})
             })
             if (response.status===200){
                 setReply('')
@@ -301,9 +301,7 @@ const Thread =({user,thread,getThreads})=>{
                     <input autoFocus={true} value={reply} style={{paddingLeft: '10px'}} type={'text'}
                            placeholder={`Reply to ${user[0].handle}...`} onChange={e => setReply(e.target.value)}/>
                     <input type={'submit'} value={'Post'} className={'postBtn'} onSubmit={reply!==''?handleReply:(e)=>{e.preventDefault()}} />
-                    {showDeleting&&<ReplyLoader showDeleting={showDeleting} showDeleted={showDeleted} showSaving={showSaving}
-                                  showSaved={showSaved} showPosted={showPosted} showPosting={showPosting}></ReplyLoader>
-                    }</form>
+                    </form>
             </ReplyInput>}
         </FeedCard>
 

@@ -2,12 +2,13 @@ const PORT = 8000
 const express = require('express')
 const cors = require('cors')
 const app = express()
-app.use(cors())
 app.use(express.json())
 const pool = require('./db')
 const jwt = require('jsonwebtoken')
 const {v4:uuidv4} = require ('uuid')
 const bcrypt = require('bcrypt')
+
+app.use(cors())
 
 // get profiles
 
@@ -45,9 +46,9 @@ app.post('/threads',async(req,res)=>{
 // get replies 
 
 app.post('/replies',async(req,res)=>{
-    const {thread_id,user}=req.body
+    const {thread_id}=req.body
     try{
-        const replies = await pool.query('WITH RECURSIVE ancestors(id,reply_to) AS (SELECT id,reply_to FROM threads  WHERE id=$1 AND thread_from=$2 UNION ALL SELECT t.id,t.reply_to FROM threads t INNER JOIN ancestors a ON  t.id=a.reply_to) SELECT t.id,t.thread_from,t.time_stamp,t.text,t.reply_to FROM threads t INNER JOIN ancestors a ON a.id=t.id AND (a.reply_to=t.reply_to OR a.reply_to IS NULL);',[thread_id,user])
+        const replies = await pool.query('WITH RECURSIVE ancestors(id,reply_to) AS (SELECT id,reply_to FROM threads  WHERE id=$1 UNION ALL SELECT t.id,t.reply_to FROM threads t INNER JOIN ancestors a ON  t.id=a.reply_to) SELECT t.id,t.thread_from,t.time_stamp,t.text,t.reply_to FROM threads t INNER JOIN ancestors a ON a.id=t.id AND (a.reply_to=t.reply_to OR a.reply_to IS NULL);',[thread_id])
         res.json(replies.rows)
     }catch(err){console.error(err)}
 })
@@ -197,15 +198,15 @@ app.post('/checkfollow',async (req,res)=>{
     }
 })
 app.post('/reply',async (req,res)=>{
-    const {threadId,poster,threadFrom,text,time,filter}=req.body
+    const {threadId,poster,threadFrom,text,time}=req.body
     console.log(req.body)
     const id = uuidv4()
     try{
         const post = await pool.query('INSERT INTO threads(id,time_stamp,thread_from,text,reply_to)VALUES($1,$2,$3,$4,$5);',[id,time,poster,text,threadId]);
-        const activity = await pool.query('INSERT INTO activities(notification_type,sender_id,recipient_id,timestamp,post_id,read_status,filter)VALUES($1,$2,$3,$4,$5,$6;$7);',['comment',poster,threadFrom,time,threadId,'false',filter]);
+        const activity = await pool.query('INSERT INTO activities(notification_type,sender_id,recipient_id,timestamp,post_id,read_status,filter)VALUES($1,$2,$3,$4,$5,$6;$7);',['comment',poster,threadFrom,time,threadId,'false','threads']);
         res.json({post: post.rows,activities:activity.rows})
     }catch (error){
-        console.error(error)
+        console.error(error);
     }
 })
 
