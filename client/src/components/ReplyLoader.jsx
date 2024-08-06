@@ -1,7 +1,7 @@
 
 
 const ReplyLoader = ({showPosting,showPosted,showDeleting,showDeleted,showSaved,showSaving})=>{
-    console.log(showDeleting)
+
     return (
         <div className={'replyLoader'}>
             {(showPosting||showSaving||showDeleting)&&<div id={'posting'}>

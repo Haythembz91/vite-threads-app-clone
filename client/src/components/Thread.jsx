@@ -169,7 +169,7 @@ const Thread =({user,thread,getThreads})=>{
         }finally {
             setShowPosting(false)
             setShowPosted(true)
-            setTimeout(()=>setShowPosted(false),1500)
+            setTimeout(()=>setShowPosted(false),2000)
         }
     }
 
@@ -179,7 +179,7 @@ const Thread =({user,thread,getThreads})=>{
 
     const handleSave = async ()=>{
         setShowMenu(false)
-
+        setShowSaving(true)
         try{
             const response = await fetch(`http://localhost:8000/${isSaved?'unsave':'save'}`,{
                 method:'POST',
@@ -188,6 +188,10 @@ const Thread =({user,thread,getThreads})=>{
             })
         }catch(e){
             console.error(e)
+        }finally {
+            setShowSaving(false)
+            setShowSaved(true)
+            setTimeout(()=>{setShowSaved(false)},2000)
         }
 
 
@@ -209,7 +213,7 @@ const Thread =({user,thread,getThreads})=>{
         }finally {
             setShowDeleting(false)
             setShowDeleted(true)
-            setTimeout(()=>setShowDeleted(false),1500)
+            setTimeout(()=>setShowDeleted(false),2000)
         }
 
     }
@@ -303,6 +307,7 @@ const Thread =({user,thread,getThreads})=>{
                     <input type={'submit'} value={'Post'} className={'postBtn'} onSubmit={reply!==''?handleReply:(e)=>{e.preventDefault()}} />
                     </form>
             </ReplyInput>}
+            <ReplyLoader showSaving={showSaving} showSaved={showSaved} showDeleting={showDeleting} showDeleted={showDeleted} showPosting={showPosting} showPosted={showPosted}></ReplyLoader>
         </FeedCard>
 
     )
