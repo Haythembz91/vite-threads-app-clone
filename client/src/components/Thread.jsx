@@ -12,7 +12,6 @@ const FeedCard = styled.article`
     border-bottom: 1px solid rgb(114,114,114);
     font-family: "Segoe UI Semibold",Arial,sans-serif;
     padding: 10px 0;
-    position: relative;
     span{
         color:rgb(114,114,114);
     }
@@ -53,6 +52,10 @@ const Icons=styled.div`
 
 `
 const ReplyInput = styled.div`
+    form{
+      display:flex;
+      justify-content:space-between;
+    }
     input{
         background-color: transparent;
         border: none;
@@ -61,13 +64,13 @@ const ReplyInput = styled.div`
             outline: none;
         }
     }
+    div{
+      display: flex;
+    }
 `
 const MoreModal = styled.div`
         cursor: pointer;
         .menuModal{
-          position: absolute;
-          right: 0;
-          top: 30px;
           display: flex;
           flex-direction: column;
           overflow: hidden;
@@ -84,9 +87,6 @@ const MoreModal = styled.div`
         
         
         .svgBtn{
-          position: absolute;
-          right: 0;
-          top: 0;
           display: flex;
           justify-content: flex-end;
           border-radius: 50%;
@@ -117,6 +117,10 @@ const Thread =({user,thread,getThreads})=>{
     const [showDeleting,setShowDeleting]=useState(false)
     const [showSaved,setShowSaved]=useState(false)
     const [showDeleted,setShowDeleted]=useState(false)
+    const [showUnsaving,setShowUnsaving]=useState(false)
+    const [showUnsaved,setShowUnsaved]=useState(false)
+    const [showEdit,setShowEdit]=useState(false)
+    const [edit,setEdit]=useState(thread.text)
 
     const likesCount = async ()=>{
         try{
@@ -173,13 +177,32 @@ const Thread =({user,thread,getThreads})=>{
         }
     }
 
-    const handleEdit=()=>{
-
+    const handleEdit = async (e)=>{
+        e.preventDefault()
+        setShowPosting(true)
+        try{
+            const response = await fetch('http://localhost:8000/editpost',{
+                method:'PUT',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({text:edit,thread_id:thread.id})
+            })
+            if(response.status===200){
+                setShowEdit(false)
+                getThreads()
+                likesCount()
+            }
+        }catch (e) {
+            console.error(e)
+        }finally {
+            setShowPosting(false)
+            setShowPosted(true)
+            setTimeout(()=>setShowPosted(false),2000)
+        }
     }
 
     const handleSave = async ()=>{
         setShowMenu(false)
-        setShowSaving(true)
+        isSaved?setShowUnsaving(true):setShowSaving(true)
         try{
             const response = await fetch(`http://localhost:8000/${isSaved?'unsave':'save'}`,{
                 method:'POST',
@@ -189,9 +212,16 @@ const Thread =({user,thread,getThreads})=>{
         }catch(e){
             console.error(e)
         }finally {
-            setShowSaving(false)
-            setShowSaved(true)
-            setTimeout(()=>{setShowSaved(false)},2000)
+            if(!isSaved){
+                setShowSaving(false)
+                setShowSaved(true)
+                setTimeout(()=>{setShowSaved(false)},2000)
+            }else{
+                setShowUnsaving(false)
+                setShowUnsaved(true)
+                setTimeout(()=>{setShowUnsaved(false)},2000)
+            }
+
         }
 
 
@@ -264,17 +294,33 @@ const Thread =({user,thread,getThreads})=>{
                             </Link>
                             <p style={{color: 'rgb(114,114,114)'}}>{timeStamp()}</p>
                             </div>
-                        <p style={{fontWeight:'400',fontFamily:'Segoe UI,arial'}}>{thread.text}</p>
+
                     </div>
                 </TextContainer>
             </Link>
+            {showEdit?<ReplyInput>
+                <form>
+                    <input autoFocus={true} value={edit} style={{paddingLeft: '10px'}} type={'text'}
+                           onChange={e => setEdit(e.target.value)}/>
+                    <div>
+                        <input type={'submit'} value={'Cancel'} className={'postBtn'} onClick={()=> {
+                            setShowEdit(false);
+                            setEdit(thread.text);
+                        }}/>
+                        <input type={'submit'} value={'Post'} className={'postBtn'} onClick={edit!==''?handleEdit:(e)=>{e.preventDefault()}} />
+                    </div>
+                </form>
+            </ReplyInput>:<p style={{fontWeight:'400',fontFamily:'Segoe UI,arial'}}>{thread.text}</p>}
             <MoreModal>
                 <div className={'svgBtn'} onClick={()=>setShowMenu(!showMenu)} >
                     <svg style={{fill:'rgb(114,114,114)'}}  width={'24px'} clipRule="evenodd" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m16.5 11.995c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25zm-6.75 0c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25zm-6.75 0c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25z"/></svg>
                 </div>
                 {showMenu&&<div className={'menuModal'}>
                     {cookies.Handle===thread.thread_from && <>
-                        <span onClick={handleEdit}>Edit post</span>
+                        <span onClick={()=> {
+                            setShowEdit(true);
+                            setShowMenu(false);
+                        }}>Edit post</span>
                         <span onClick={handleDelete}>Delete post</span>
                     </>}
                     {cookies.Handle!==thread.thread_from && <span onClick={handleSave}>{isSaved ? 'Unsave post' : 'Save post'}</span>}
@@ -301,13 +347,13 @@ const Thread =({user,thread,getThreads})=>{
                 </div>
             </Icons>
             {showReplyInput&&<ReplyInput>
-                <form style={{position:'relative'}} onSubmit={reply!==''?handleReply:(e)=>{e.preventDefault()}}>
+                <form onSubmit={reply!==''?handleReply:(e)=>{e.preventDefault()}}>
                     <input autoFocus={true} value={reply} style={{paddingLeft: '10px'}} type={'text'}
                            placeholder={`Reply to ${user[0].handle}...`} onChange={e => setReply(e.target.value)}/>
                     <input type={'submit'} value={'Post'} className={'postBtn'} onSubmit={reply!==''?handleReply:(e)=>{e.preventDefault()}} />
                     </form>
             </ReplyInput>}
-            <ReplyLoader showSaving={showSaving} showSaved={showSaved} showDeleting={showDeleting} showDeleted={showDeleted} showPosting={showPosting} showPosted={showPosted}></ReplyLoader>
+            <ReplyLoader showUnsaving={showUnsaving} showUnsaved={showUnsaved} showSaving={showSaving} showSaved={showSaved} showDeleting={showDeleting} showDeleted={showDeleted} showPosting={showPosting} showPosted={showPosted}></ReplyLoader>
         </FeedCard>
 
     )

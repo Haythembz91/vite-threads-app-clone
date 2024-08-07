@@ -107,6 +107,18 @@ app.post('/post',async(req,res)=>{
     }catch (error){console.log(error)}
 })
 
+app.put('/editpost',async(req,res)=>{
+
+    const {text,thread_id}=req.body
+
+    try{
+        const editPost = await pool.query('UPDATE threads SET text=$1 WHERE id=$2;',[text,thread_id])
+        res.json(editPost.rows)
+    }catch (error){
+        console.log(error)
+    }
+})
+
 app.put('/edit',async(req,res)=>{
 
     const {handle,name,avatar,bio,link,inst}=req.body
