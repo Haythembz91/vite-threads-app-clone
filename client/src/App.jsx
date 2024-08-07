@@ -21,7 +21,6 @@ const App = ()=>{
     const [threads,setThreads]=useState([])
     const authToken = cookies.AuthToken
     const [showLoader,setShowLoader]=useState(true)
-
     const getUsers = async()=>{
         const response  = await fetch(`http://localhost:8000/users/`)
         const data = await response.json()
@@ -44,6 +43,12 @@ const App = ()=>{
         }
 
     }
+    const handleClickOutside = (e)=>{
+        const modal = document.querySelector('.kGcdEL');
+        if (e.target===modal){
+            setShowModal(false)
+        }
+    }
 
     useEffect( ()=>{
         if(authToken){
@@ -53,6 +58,24 @@ const App = ()=>{
 
     },[])
 
+    useEffect(()=>{
+        document.addEventListener('mousedown',handleClickOutside)
+        return ()=>{
+            document.removeEventListener('mousedown',handleClickOutside)
+        }
+    },[showModal])
+
+    useEffect(()=>{
+        const handleKeyDown = (e)=>{
+            if(e.key==='Escape'){
+                setShowModal(false)
+            }
+        }
+        document.addEventListener('keydown',handleKeyDown)
+        return ()=>{
+            document.removeEventListener('keydown',handleKeyDown)
+        }
+    },[showModal])
 
 
     return(

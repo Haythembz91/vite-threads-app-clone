@@ -15,6 +15,15 @@ const FeedCard = styled.article`
     span{
         color:rgb(114,114,114);
     }
+  .svgBtn{
+    display: flex;
+    justify-content: flex-end;
+    border-radius: 50%;
+    padding: 7px;
+    &:hover {
+      background-color: #151515;
+    }
+  }
 `
 export const TextContainer = styled.div`
     display: flex;
@@ -70,7 +79,10 @@ const ReplyInput = styled.div`
 `
 const MoreModal = styled.div`
         cursor: pointer;
+        display: flex;
+        justify-content: right;
         .menuModal{
+          position: absolute;
           display: flex;
           flex-direction: column;
           overflow: hidden;
@@ -83,17 +95,6 @@ const MoreModal = styled.div`
           }
           border: solid 1px rgb(114,114,114) ;
           border-radius: 15px;
-        }
-        
-        
-        .svgBtn{
-          display: flex;
-          justify-content: flex-end;
-          border-radius: 50%;
-          padding: 7px;
-          &:hover {
-            background-color: #151515;
-          }
         }
 `
 
@@ -280,24 +281,58 @@ const Thread =({user,thread,getThreads})=>{
         getThreads()
     },[likes,replies,thread_id,showMenu])
 
+    useEffect(()=>{
+        const handleClickOutside = (e)=>{
+            const menu = document.querySelector('.menuModal')
+            const btn = document.querySelector('.svgBtn')
+            if(e.target!==menu.children[0]&&e.target!==menu.children[1]&&e.target!==btn){
+                setShowMenu(false)
+                console.log('event handled')
+            }
+        }
+        document.addEventListener('mousedown',handleClickOutside);
+
+        return ()=>{
+            document.removeEventListener('mousedown',handleClickOutside)
+        }
+    },[showMenu])
+
 
     return (
         <FeedCard>
-            <Link key={thread.id} to={`/${thread.thread_from}/post/${thread.id}`}>
-                <TextContainer>
-                    <Link to={`/users/${thread.thread_from}`}>
-                        <Img><img src={user[0].img} alt={'avatar image'}/></Img>
-                    </Link>
-                    <div>
-                        <div style={{display: 'flex'}}>
-                            <Link to={`/users/${thread.thread_from}`}><p style={{fontWeight:'600'}}>{thread.thread_from}</p>
-                            </Link>
-                            <p style={{color: 'rgb(114,114,114)'}}>{timeStamp()}</p>
+            <div style={{display:'flex',justifyContent:'space-between'}}>
+                <Link key={thread.id} to={`/${thread.thread_from}/post/${thread.id}`}>
+                    <TextContainer>
+                        <Link to={`/users/${thread.thread_from}`}>
+                            <Img><img src={user[0].img} alt={'avatar image'}/></Img>
+                        </Link>
+                        <div>
+                            <div style={{display: 'flex'}}>
+                                <Link to={`/users/${thread.thread_from}`}><p style={{fontWeight:'600'}}>{thread.thread_from}</p>
+                                </Link>
+                                <p style={{color: 'rgb(114,114,114)'}}>{timeStamp()}</p>
                             </div>
 
-                    </div>
-                </TextContainer>
-            </Link>
+                        </div>
+                    </TextContainer>
+                </Link>
+                <div className={'svgBtn'} onClick={()=>setShowMenu(!showMenu)} >
+                    <svg style={{fill:'rgb(114,114,114)'}}  width={'24px'} clipRule="evenodd" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m16.5 11.995c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25zm-6.75 0c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25zm-6.75 0c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25z"/></svg>
+                </div>
+            </div>
+            {showMenu&&<MoreModal>
+                <div className={'menuModal'}>
+                    {cookies.Handle === thread.thread_from && <>
+                        <span onClick={() => {
+                            setShowEdit(true);
+                            setShowMenu(false);
+                        }}>Edit post</span>
+                        <span onClick={handleDelete}>Delete post</span>
+                    </>}
+                    {cookies.Handle !== thread.thread_from &&
+                        <span onClick={handleSave}>{isSaved ? 'Unsave post' : 'Save post'}</span>}
+                </div>
+            </MoreModal>}
             {showEdit?<ReplyInput>
                 <form>
                     <input autoFocus={true} value={edit} style={{paddingLeft: '10px'}} type={'text'}
@@ -311,21 +346,7 @@ const Thread =({user,thread,getThreads})=>{
                     </div>
                 </form>
             </ReplyInput>:<p style={{fontWeight:'400',fontFamily:'Segoe UI,arial'}}>{thread.text}</p>}
-            <MoreModal>
-                <div className={'svgBtn'} onClick={()=>setShowMenu(!showMenu)} >
-                    <svg style={{fill:'rgb(114,114,114)'}}  width={'24px'} clipRule="evenodd" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m16.5 11.995c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25zm-6.75 0c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25zm-6.75 0c0-1.242 1.008-2.25 2.25-2.25s2.25 1.008 2.25 2.25-1.008 2.25-2.25 2.25-2.25-1.008-2.25-2.25z"/></svg>
-                </div>
-                {showMenu&&<div className={'menuModal'}>
-                    {cookies.Handle===thread.thread_from && <>
-                        <span onClick={()=> {
-                            setShowEdit(true);
-                            setShowMenu(false);
-                        }}>Edit post</span>
-                        <span onClick={handleDelete}>Delete post</span>
-                    </>}
-                    {cookies.Handle!==thread.thread_from && <span onClick={handleSave}>{isSaved ? 'Unsave post' : 'Save post'}</span>}
-                </div>}
-            </MoreModal>
+
             <Icons>
                 <div>
                     <svg style={isLiked ? {fill: '#ff0034'} : {fill: 'transparent',stroke:'grey'}} onClick={handleLike} clipRule="evenodd" fillRule="evenodd" strokeLinejoin="round" strokeMiterlimit="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="m12 5.72c-2.624-4.517-10-3.198-10 2.461 0 3.725 4.345 7.727 9.303 12.54.194.189.446.283.697.283s.503-.094.697-.283c4.977-4.831 9.303-8.814 9.303-12.54 0-5.678-7.396-6.944-10-2.461z" fillRule="nonzero"/>
