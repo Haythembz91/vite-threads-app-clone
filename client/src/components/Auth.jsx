@@ -9,7 +9,7 @@ const AuthContainer = styled.div`
     width: 50%;
     margin: auto;
 `
-const AuthContainerBox = styled.div`
+export const AuthContainerBox = styled.div`
   display: flex;
   flex-direction: column;
   label{

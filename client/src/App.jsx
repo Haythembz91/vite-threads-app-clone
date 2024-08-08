@@ -9,6 +9,7 @@ import Auth from './components/Auth.jsx'
 import {useCookies} from "react-cookie";
 import ThreadPage from "./pages/ThreadPage.jsx";
 import Activity from "./pages/Activity.jsx";
+import Search from "./pages/Search.jsx";
 
 
 
@@ -77,7 +78,6 @@ const App = ()=>{
         }
     },[showModal])
 
-
     return(
         <>
             {authToken&&<div className={'app'}>
@@ -85,6 +85,7 @@ const App = ()=>{
                 <div>
                     <Routes>
                         <Route path={"/"} element={<Home showLoader={showLoader} users={users} getThreads={getThreads} threads={threads}/>}></Route>
+                        <Route path={"/search"} element={<Search users={users}/>}></Route>
                         <Route path={'/users/:slug'} element={<Profile getThreads={getThreads} users={users} threads={threads}/>}></Route>
                         <Route path={'/:user/post/:thread_id'} element={<ThreadPage getThreads={getThreads} showModal={showModal} setShowModal={setShowModal} users={users} threads={threads}/>}></Route>
                         <Route path={'/activities'} element={<Activity users={users} />}></Route>

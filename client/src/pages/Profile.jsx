@@ -34,7 +34,7 @@ export const ImageContainer = styled.div`
     width: 100%;
   }
 `
-const SubInfoContainer = styled.div`
+export const SubInfoContainer = styled.div`
   color: rgb(114,114,114);
   a{
     text-decoration: none;

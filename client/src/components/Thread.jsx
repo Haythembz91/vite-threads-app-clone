@@ -281,21 +281,6 @@ const Thread =({user,thread,getThreads})=>{
         getThreads()
     },[likes,replies,thread_id,showMenu])
 
-    useEffect(()=>{
-        const handleClickOutside = (e)=>{
-            const menu = document.querySelector('.menuModal')
-            const btn = document.querySelector('.svgBtn')
-            if(e.target!==menu.children[0]&&e.target!==menu.children[1]&&e.target!==btn){
-                setShowMenu(false)
-                console.log('event handled')
-            }
-        }
-        document.addEventListener('mousedown',handleClickOutside);
-
-        return ()=>{
-            document.removeEventListener('mousedown',handleClickOutside)
-        }
-    },[showMenu])
 
 
     return (

@@ -1,6 +1,5 @@
 import Feed from './../components/Feed.jsx'
 import Loader from './../components/Loader.jsx'
-import {useEffect} from "react";
 
 
 
