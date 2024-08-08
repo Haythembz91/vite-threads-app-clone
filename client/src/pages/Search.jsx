@@ -23,11 +23,11 @@ const Search = ({users})=>{
         <div className={'profile-page-container'}>
             <AuthContainerBox>
                     <form>
-                        <input autoFocus={true} placeholder={'Search'} onChange={handleChange}/>
+                        <input style={{backgroundColor:'#505050',border:'none',outline:'none'}} autoFocus={true} placeholder={'Search'} onChange={handleChange}/>
                     </form>
             </AuthContainerBox>
             <SearchContainer>
-                {users.filter(user=>user.handle.toLocaleLowerCase().includes(input.toLocaleLowerCase())||user.username.toLocaleLowerCase().includes(input.toLocaleLowerCase())).map(user=><ProfileContainer>
+                {users.filter(user=>user.handle.toLocaleLowerCase().includes(input.toLocaleLowerCase())||user.username.toLocaleLowerCase().includes(input.toLocaleLowerCase())).map((user,index)=><ProfileContainer key={index}>
                     <Link to={`/users/${user.handle}`}>
                         <div style={{display:'flex',justifyContent:'space-between'}}>
                             <div style={{display:'flex'}}>
@@ -40,7 +40,7 @@ const Search = ({users})=>{
                                 </div>
                             </div>
                             <SubInfoContainer>
-                                <button style={{width:'100%'}} className={'primary'}>Follow</button>
+                                <button style={{width:'100%'}} className={'primary'}>{user.isfollowed?'Unfollow':'Follow'}</button>
                             </SubInfoContainer>
                         </div>
                     </Link>

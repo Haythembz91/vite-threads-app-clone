@@ -24,11 +24,15 @@ app.get('/users/:handle',async (req,res)=>{
 
 // get all users & threads
 
-app.get('/users',async (req,res)=>{
-
-
+app.post('/users',async (req,res)=>{
+    const {handle}=req.body
     try{
-        const users = await pool.query('SELECT * FROM profiles;')
+        const users = await pool.query('SELECT p.*,\n' +
+            'CASE \n' +
+            'WHEN follower = $1 THEN TRUE\n' +
+            'ELSE FALSE\n' +
+            'END AS isFollowed\n' +
+            'FROM profiles p LEFT JOIN followers f ON handle=leader AND follower=$1;',[handle])
         res.json(users.rows)
     }catch(err){console.error(err)}
 

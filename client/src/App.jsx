@@ -23,9 +23,17 @@ const App = ()=>{
     const authToken = cookies.AuthToken
     const [showLoader,setShowLoader]=useState(true)
     const getUsers = async()=>{
-        const response  = await fetch(`http://localhost:8000/users/`)
-        const data = await response.json()
-        setUsers(data)
+        try{
+            const response  = await fetch(`http://localhost:8000/users/`,{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({handle:cookies.Handle})
+            })
+            const data = await response.json()
+            setUsers(data)
+        }catch(e){
+            console.error(e)
+        }
     }
 
     const getThreads = async()=>{
@@ -77,6 +85,8 @@ const App = ()=>{
             document.removeEventListener('keydown',handleKeyDown)
         }
     },[showModal])
+
+
 
     return(
         <>
