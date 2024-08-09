@@ -11,25 +11,38 @@ const ProfileContainer=styled.div`
   padding: 10px;
   border-bottom: 0.5px solid rgb(104,104,104);
 `
-const Search = ({users})=>{
+const Search = ({users,handle,getUsers})=>{
 
     const [input,setInput]=useState('')
-    const handleChange=(e)=>{
-        setInput(e.target.value)
 
+    const handleFollow = async (e,user)=>{
+        e.preventDefault()
+        try{
+            const response = await fetch(`http://localhost:8000/${user.isfollowed?'unfollow':'follow'}`,{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({leader:user.handle,follower:handle,filter:'follow'})
+            })
+            if(response.status===200){
+                getUsers()
+            }
+        }catch(error){
+            console.error(error)
+        }
     }
 
     return (
         <div className={'profile-page-container'}>
             <AuthContainerBox>
                     <form>
-                        <input style={{backgroundColor:'#505050',border:'none',outline:'none'}} autoFocus={true} placeholder={'Search'} onChange={handleChange}/>
+                        <input style={{backgroundColor:'#505050',border:'none',outline:'none'}} autoFocus={true} placeholder={'Search'} onChange={(e)=>setInput(e.target.value)}/>
                     </form>
             </AuthContainerBox>
             <SearchContainer>
                 {users.filter(user=>user.handle.toLocaleLowerCase().includes(input.toLocaleLowerCase())||user.username.toLocaleLowerCase().includes(input.toLocaleLowerCase())).map((user,index)=><ProfileContainer key={index}>
-                    <Link to={`/users/${user.handle}`}>
+
                         <div style={{display:'flex',justifyContent:'space-between'}}>
+                            <Link to={`/users/${user.handle}`}>
                             <div style={{display:'flex'}}>
                                 <div style={{display:'flex',alignItems:'center'}}>
                                     <Img><img src={user.img} alt={'avatar image'}/></Img>
@@ -39,11 +52,11 @@ const Search = ({users})=>{
                                     <p style={{color:'rgb(104,104,104)'}}>{user.username}</p>
                                 </div>
                             </div>
+                            </Link>
                             <SubInfoContainer>
-                                <button style={{width:'100%'}} className={'primary'}>{user.isfollowed?'Unfollow':'Follow'}</button>
+                                <button style={{width:'100%'}} className={'primary'} onClick={(e)=>handleFollow(e,user)}>{user.isfollowed?'Unfollow':'Follow'}</button>
                             </SubInfoContainer>
                         </div>
-                    </Link>
                 </ProfileContainer>)}
             </SearchContainer>
         </div>

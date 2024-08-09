@@ -58,7 +58,7 @@ export const ButtonContainer = styled.div`
 
 
 
-const Profile = ({users,threads,getThreads,showModal,setShowModal,isReply,setIsReply})=>{
+const Profile = ({users,threads,getThreads,getUsers,showModal,setShowModal,isReply,setIsReply})=>{
 
     const [mode,setMode] = useState('threads')
     const [user,setUser]=useState([])
@@ -110,6 +110,7 @@ const Profile = ({users,threads,getThreads,showModal,setShowModal,isReply,setIsR
                 isFollowed?setEndPoint('unfollow'):setEndPoint('follow')
                 getFollowers()
                 getThreads()
+                getUsers()
                 
 
             }
@@ -131,7 +132,8 @@ const Profile = ({users,threads,getThreads,showModal,setShowModal,isReply,setIsR
 
     useEffect(()=>{
         getThreads()
-    },[mode])
+        getUsers()
+    },[mode,isFollowed])
 
     
     return(
