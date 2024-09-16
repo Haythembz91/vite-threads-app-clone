@@ -9,9 +9,7 @@ const jwt = require('jsonwebtoken')
 const {v4:uuidv4} = require ('uuid')
 const bcrypt = require('bcrypt')
 
-app.use(cors(
-    {origin:"https://vite-threads-app-clone-1.onrender.com"}
-))
+app.use(cors())
 
 
 // get all users & threads
